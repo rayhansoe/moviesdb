@@ -6,9 +6,10 @@ const Header = lazy(() => import("./components/Header"))
 const SearchBox = lazy(() => import("./components/SearchBox"))
 
 function App() {
-	const [title, setTitle] = useState("")
-	const [movies, setMovies] = useState([])
-	const _title = useRef("")
+	const [title, setTitle] = useState(() => "")
+	const [movies, setMovies] = useState(() => [])
+	const [page, setPage] = useState(() => 1)
+	const _title = useRef(() => "")
 
 	const fetchResponse = useMemo(() => handleResponse, [])
 	const fetchError = useMemo(() => handleError, [])
@@ -18,7 +19,7 @@ function App() {
 			console.log("title kosong saat useEffect")
 			setMovies(() => [])
 		} else {
-			let a = fetch(`https://www.omdbapi.com/?s=${title}&apikey=41eec44f`)
+			let a = fetch(`https://www.omdbapi.com/?s=${title}&apikey=41eec44f&page=${page}`)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
 				if (data.Error === "Movie not found!") {
@@ -28,7 +29,7 @@ function App() {
 				}
 			})
 		}
-	}, [fetchError, fetchResponse, title])
+	}, [fetchError, fetchResponse, page, title])
 
 	const handleChange = e => {
 		_title.current = e
@@ -44,7 +45,13 @@ function App() {
 				<div className='separator'></div>
 
 				<Suspense fallback={<h1>Loading.... </h1>}>
-					<SearchBox onChange={handleChange} setTitle={setTitle} preTitle={_title} />
+					<SearchBox
+						onChange={handleChange}
+						setTitle={setTitle}
+						_title={_title}
+						title={title}
+						setPage={setPage}
+					/>
 				</Suspense>
 
 				<h1 className='title'>{title}</h1>
@@ -59,6 +66,13 @@ function App() {
 								)
 						  })}
 				</div>
+				<div className='separator' style={{ backgroundColor: "#ffffff" }}></div>
+				<div>{movies.length === 0 ? "" : page + 1}</div>
+				{movies.length === 0 ? (
+					""
+				) : (
+					<button onClick={() => setPage(prevPage => prevPage + 1)}>+</button>
+				)}
 				<div className='separator' style={{ backgroundColor: "#ffffff" }}></div>
 			</div>
 		</>

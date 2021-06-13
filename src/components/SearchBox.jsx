@@ -1,10 +1,17 @@
 import { delays } from "../tools/delays"
 import React, { useMemo } from "react"
 
-const SearchBox = ({ onChange, setTitle, preTitle }) => {
+const SearchBox = ({ onChange, setTitle, _title, title, setPage }) => {
 	const delay = useMemo(
-		() => delays(() => setTitle(() => preTitle.current), 1000),
-		[preTitle, setTitle]
+		() =>
+			delays(() => {
+				if (_title.current !== title) {
+					setTitle(() => _title.current)
+					setPage(() => 1)
+				}
+				return
+			}, 2500),
+		[_title, setPage, setTitle, title]
 	)
 
 	return (
