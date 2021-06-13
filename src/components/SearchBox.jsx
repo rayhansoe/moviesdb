@@ -14,7 +14,7 @@ const SearchBox = ({ onChange, setTitle, preTitle }) => {
 				className='search-box'
 				onChange={e => onChange(e.target.value)}
 				onKeyUp={delay}
-				placeholder={"Avengers"}
+				placeholder={"Search..."}
 			/>
 		</div>
 	)
