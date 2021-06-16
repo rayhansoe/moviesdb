@@ -1,31 +1,122 @@
-/* eslint-disable no-unused-vars */
 import { delays } from "../tools/delays"
-import React, { useMemo, useState, useRef } from "react"
+import React, { useMemo, useState, useRef, useEffect } from "react"
+import { handleError, handleResponse } from "../tools/apiUtils"
 
-const SearchBox = ({ onChange, setTitle, _title, title, setPage, page, setMovies, prevMovies }) => {
+const SearchBox = ({
+	onChange,
+	setTitle,
+	_title,
+	title,
+	setPage,
+	page,
+	setMovies,
+	prevMovies,
+	previewMovies,
+	setPreviewMovies,
+}) => {
 	const [preTitle, setPreTitle] = useState(() => "")
-	const [focused, setFocused] = React.useState(false)
-	const myInput = useRef(() => null)
+	const url = useRef(() => "")
 
+	const myInput = useRef(() => null)
+	const myPreview = useRef(() => null)
+
+	const fetchResponse = useMemo(() => handleResponse, [])
+	const fetchError = useMemo(() => handleError, [])
 	const delay = useMemo(
 		() =>
 			delays(() => {
 				if (_title.current !== title) {
-					setPage(prev => prev - prev + 1)
 					setPreTitle(() => _title.current)
 				}
 			}, 1500),
-		[_title, setPage, title]
+		[_title, title]
 	)
 
-	const onFocus = () => setFocused(true)
-	const onBlur = () => setFocused(false)
+	useEffect(() => {
+		if (title.length !== 0 && preTitle === title) {
+			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&page=${page}`
+			let a = fetch(url.current)
+			a = a.then(fetchResponse).catch(fetchError)
+			a.then(data => {
+				if (data.Error === "Movie not found! - enter") {
+					prevMovies.current = []
+				} else {
+					prevMovies.current = data.Search
+					setMovies(() => prevMovies.current)
+				}
+			})
+		} else if (preTitle.length !== 0 && title !== preTitle) {
+			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f`
+
+			let a = fetch(url.current)
+			a = a.then(fetchResponse).catch(fetchError)
+			a.then(data => {
+				if (data.Error) {
+					prevMovies.current = []
+				} else {
+					prevMovies.current = data.Search
+					setPreviewMovies(() => prevMovies.current)
+				}
+			})
+		} else if (_title.length === 0 && preTitle.length === 0) {
+			prevMovies.current = []
+			setTitle(() => "")
+		}
+	}, [
+		_title,
+		fetchError,
+		fetchResponse,
+		page,
+		preTitle,
+		prevMovies,
+		setMovies,
+		setPreviewMovies,
+		setTitle,
+		title,
+	])
+
+	const renderSuggestions = () => {
+		if (previewMovies.length === 0) {
+			return null
+		}
+		return (
+			<ul className='search-preview show' ref={myPreview}>
+				{previewMovies.slice(0, 2).map(movie => {
+					return (
+						<li className='movie-card' key={movie.imdbID}>
+							<img src={movie.Poster} alt='' className='poster' />
+							<div className='detail'>
+								<h3 className='movie-title'>{movie.Title}</h3>
+								<div className='sec1'>
+									<p className='imdb'>
+										imdb: <span>8.9</span>
+									</p>
+									<p className='category'>Comedy, Action, Sci-Fi, Advanture</p>
+								</div>
+								<p className='duration'>180 min</p>
+							</div>
+						</li>
+					)
+				})}
+				<li className='cta' key='cta'>
+					<h4
+						onClick={e => {
+							setMovies(() => prevMovies.current)
+							setTitle(() => preTitle)
+							setPreviewMovies(() => [])
+							setPage(currentPage => currentPage - currentPage + 1)
+						}}>
+						Lihat Lebih Banyak...
+					</h4>
+				</li>
+			</ul>
+		)
+	}
 
 	return (
 		<>
-			<div>
+			<div className='search-section' ref={myInput}>
 				<input
-					ref={myInput}
 					type='text'
 					className='search-box'
 					onChange={e => onChange(e.target.value)}
@@ -33,59 +124,14 @@ const SearchBox = ({ onChange, setTitle, _title, title, setPage, page, setMovies
 						if (e.key === "Enter") {
 							setTitle(() => _title.current)
 							setPage(() => 1)
-							// setMovies(pre => )
+							setPreviewMovies(() => [])
 						}
 					}}
 					onKeyUp={delay}
 					placeholder={"Search..."}
-					onFocus={onFocus}
-					onBlur={onBlur}
 				/>
+				{renderSuggestions()}
 			</div>
-			{focused ? (
-				<div className={focused ? "search-preview show" : "search-preview"}>
-					<div className='movie-card'>
-						<img
-							src='https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_SX300.jpg'
-							alt=''
-							className='poster'
-						/>
-						<div className='detail'>
-							<h3 className='movie-title'>The Avengers (2012)</h3>
-							<div className='sec1'>
-								<p className='imdb'>
-									imdb: <span>8.9</span>
-								</p>
-								<p className='category'>Comedy, Action, Sci-Fi, Advanture</p>
-							</div>
-							<p className='duration'>180 min</p>
-						</div>
-					</div>
-					<div className='movie-card'>
-						<img
-							src='https://m.media-amazon.com/images/M/MV5BMTc5MDE2ODcwNV5BMl5BanBnXkFtZTgwMzI2NzQ2NzM@._V1_SX300.jpg'
-							alt=''
-							className='poster'
-						/>
-						<div className='detail'>
-							<h3 className='movie-title'>The Avengers (2012)</h3>
-							<div className='sec1'>
-								<p className='imdb'>
-									imdb: <span>8.9</span>
-								</p>
-								<p className='category'>Comedy, Action, Sci-Fi, Advanture</p>
-							</div>
-							<p className='duration'>180 min</p>
-						</div>
-					</div>
-					<div className='cta'>
-						<h4>Lihat Lebih Banyak...</h4>
-					</div>
-				</div>
-			) : (
-				""
-			)}
-			{/* <h1>{focused ? url : ""}</h1> */}
 		</>
 	)
 }
