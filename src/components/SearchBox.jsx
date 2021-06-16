@@ -25,18 +25,14 @@ const SearchBox = ({
 
 	const fetchResponse = useMemo(() => handleResponse, [])
 	const fetchError = useMemo(() => handleError, [])
-	const delay = useMemo(
-		() =>
-			// ini harus di revisi lagi, pengkondisian dengan delay yang berbeda.
-			delays(() => {
-				if (_title.current !== title && _title.current !== preTitle) {
-					setPreTitle(() => _title.current)
-				} else if (_title.current === title && _title.current === preTitle) {
-					setPreTitle(() => _title.current)
-				}
-			}, 1500),
-		[_title, preTitle, title]
-	)
+	const delay = useMemo(() =>
+		// ini harus di revisi lagi, pengkondisian dengan delay yang berbeda.
+		{
+			if (_title.current === title && _title.current === preTitle) {
+				delays(() => setPreTitle(() => _title.current), 0)
+			}
+			return delays(() => setPreTitle(() => _title.current), 1500)
+		}, [_title, preTitle, title])
 
 	useEffect(() => {
 		if (title.length !== 0 && preTitle === title) {
@@ -52,9 +48,6 @@ const SearchBox = ({
 				}
 			})
 		} else if (preTitle.length !== 0 && title !== preTitle) {
-			console.log(_title.current)
-			console.log(preTitle)
-			console.log(title)
 			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f`
 
 			let a = fetch(url.current)
@@ -68,9 +61,6 @@ const SearchBox = ({
 				}
 			})
 		} else if (_title.current === title && _title.current === preTitle && title === preTitle) {
-			console.log(_title.current)
-			console.log(preTitle)
-			console.log(title)
 			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f`
 
 			let a = fetch(url.current)
@@ -145,6 +135,7 @@ const SearchBox = ({
 							setTitle(() => _title.current)
 							setPreTitle(() => _title.current)
 							setPage(() => 1)
+							setPreviewMovies(curr => curr.splice(0, curr.length))
 						}
 					}}
 					onKeyUp={delay}
