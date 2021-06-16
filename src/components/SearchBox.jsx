@@ -1,7 +1,7 @@
 import { delays } from "../tools/delays"
-import React, { useMemo, useState, useRef, useEffect } from "react"
+import React, { useMemo, useState, useRef, useEffect, lazy } from "react"
 import { handleError, handleResponse } from "../tools/apiUtils"
-import { getMovie } from "../tools/MovieApi"
+const MovieDetail = lazy(() => import("./MovieDetail"))
 
 const SearchBox = ({
 	onChange,
@@ -16,8 +16,9 @@ const SearchBox = ({
 	setPreviewMovies,
 }) => {
 	const [preTitle, setPreTitle] = useState(() => "")
-	const url = useRef(() => "")
+	const [preMovie, setPreMovie] = useState(() => {})
 
+	const url = useRef(() => "")
 	const myInput = useRef(() => null)
 	const myPreview = useRef(() => null)
 	const movie = useRef(() => {})
@@ -26,12 +27,15 @@ const SearchBox = ({
 	const fetchError = useMemo(() => handleError, [])
 	const delay = useMemo(
 		() =>
+			// ini harus di revisi lagi, pengkondisian dengan delay yang berbeda.
 			delays(() => {
-				if (_title.current !== title) {
+				if (_title.current !== title && _title.current !== preTitle) {
+					setPreTitle(() => _title.current)
+				} else if (_title.current === title && _title.current === preTitle) {
 					setPreTitle(() => _title.current)
 				}
 			}, 1500),
-		[_title, title]
+		[_title, preTitle, title]
 	)
 
 	useEffect(() => {
@@ -48,6 +52,25 @@ const SearchBox = ({
 				}
 			})
 		} else if (preTitle.length !== 0 && title !== preTitle) {
+			console.log(_title.current)
+			console.log(preTitle)
+			console.log(title)
+			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f`
+
+			let a = fetch(url.current)
+			a = a.then(fetchResponse).catch(fetchError)
+			a.then(data => {
+				if (data.Error) {
+					prevMovies.current = []
+				} else {
+					prevMovies.current = data.Search
+					setPreviewMovies(() => prevMovies.current)
+				}
+			})
+		} else if (_title.current === title && _title.current === preTitle && title === preTitle) {
+			console.log(_title.current)
+			console.log(preTitle)
+			console.log(title)
 			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f`
 
 			let a = fetch(url.current)
@@ -77,45 +100,21 @@ const SearchBox = ({
 		title,
 	])
 
-	const MovieDetail = ({ id }) => {
-		const [preMovie, setPreMovie] = useState(() => {})
-		useEffect(() => {
-			getMovie(id).then(res => {
-				if (res) {
-					movie.current = res
-					setPreMovie(() => movie.current)
-				}
-			})
-
-			return
-		}, [id])
-		return preMovie ? (
-			<>
-				<img src={preMovie.Poster} alt='' className='poster' />
-				<div className='detail'>
-					<h3 className='movie-title'>{preMovie.Title}</h3>
-					<div className='sec1'>
-						<p className='imdb'>
-							imdb: <span>{preMovie.imdbRating}</span>
-						</p>
-						<p className='category'>{preMovie.Genre}</p>
-					</div>
-					<p className='duration'>{preMovie.Runtime}</p>
-				</div>
-			</>
-		) : null
-	}
-
 	const renderSuggestions = () => {
 		if (previewMovies.length === 0) {
 			return null
 		}
 		return (
 			<ul className='search-preview show' ref={myPreview}>
-				{previewMovies.slice(0, 2).map(movie => {
+				{previewMovies.slice(0, 2).map(m => {
 					return (
-						<li className='movie-card' key={movie.imdbID}>
-							<MovieDetail id={movie.imdbID} />
+						<li className='movie-card' key={m.imdbID}>
+							<MovieDetail
+								id={m.imdbID}
+								preMovie={preMovie}
+								setPreMovie={setPreMovie}
+								movie={movie}
+							/>
 						</li>
 					)
 				})}
@@ -144,8 +143,8 @@ const SearchBox = ({
 					onKeyDown={e => {
 						if (e.key === "Enter") {
 							setTitle(() => _title.current)
+							setPreTitle(() => _title.current)
 							setPage(() => 1)
-							setPreviewMovies(() => [])
 						}
 					}}
 					onKeyUp={delay}
