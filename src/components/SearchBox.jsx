@@ -1,6 +1,7 @@
 import { delays } from "../tools/delays"
 import React, { useMemo, useState, useRef, useEffect } from "react"
 import { handleError, handleResponse } from "../tools/apiUtils"
+import { getMovie } from "../tools/MovieApi"
 
 const SearchBox = ({
 	onChange,
@@ -19,6 +20,7 @@ const SearchBox = ({
 
 	const myInput = useRef(() => null)
 	const myPreview = useRef(() => null)
+	const movie = useRef(() => {})
 
 	const fetchResponse = useMemo(() => handleResponse, [])
 	const fetchError = useMemo(() => handleError, [])
@@ -38,7 +40,7 @@ const SearchBox = ({
 			let a = fetch(url.current)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
-				if (data.Error === "Movie not found! - enter") {
+				if (data.Error) {
 					prevMovies.current = []
 				} else {
 					prevMovies.current = data.Search
@@ -75,6 +77,35 @@ const SearchBox = ({
 		title,
 	])
 
+	const MovieDetail = ({ id }) => {
+		const [preMovie, setPreMovie] = useState(() => {})
+		useEffect(() => {
+			getMovie(id).then(res => {
+				if (res) {
+					movie.current = res
+					setPreMovie(() => movie.current)
+				}
+			})
+
+			return
+		}, [id])
+		return preMovie ? (
+			<>
+				<img src={preMovie.Poster} alt='' className='poster' />
+				<div className='detail'>
+					<h3 className='movie-title'>{preMovie.Title}</h3>
+					<div className='sec1'>
+						<p className='imdb'>
+							imdb: <span>{preMovie.imdbRating}</span>
+						</p>
+						<p className='category'>{preMovie.Genre}</p>
+					</div>
+					<p className='duration'>{preMovie.Runtime}</p>
+				</div>
+			</>
+		) : null
+	}
+
 	const renderSuggestions = () => {
 		if (previewMovies.length === 0) {
 			return null
@@ -84,17 +115,7 @@ const SearchBox = ({
 				{previewMovies.slice(0, 2).map(movie => {
 					return (
 						<li className='movie-card' key={movie.imdbID}>
-							<img src={movie.Poster} alt='' className='poster' />
-							<div className='detail'>
-								<h3 className='movie-title'>{movie.Title}</h3>
-								<div className='sec1'>
-									<p className='imdb'>
-										imdb: <span>8.9</span>
-									</p>
-									<p className='category'>Comedy, Action, Sci-Fi, Advanture</p>
-								</div>
-								<p className='duration'>180 min</p>
-							</div>
+							<MovieDetail id={movie.imdbID} />
 						</li>
 					)
 				})}
