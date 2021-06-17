@@ -73,6 +73,7 @@ function App() {
 				</div>
 				<div className='separator' style={{ backgroundColor: "#ffffff" }}></div>
 				<div className='pagination'>
+					{/* need to fix, limit button. */}
 					{renderPagination().map(_page => {
 						return (
 							<button
