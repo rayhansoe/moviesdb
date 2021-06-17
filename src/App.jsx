@@ -4,16 +4,27 @@ const Header = lazy(() => import("./components/Header"))
 const SearchBox = lazy(() => import("./components/SearchBox"))
 
 function App() {
+	const [page, setPage] = useState(() => 0)
 	const [title, setTitle] = useState(() => "")
 	const [movies, setMovies] = useState(() => [])
-	const [page, setPage] = useState(() => 1)
-	const _title = useRef(() => "")
-	const [previewMovies, setPreviewMovies] = useState(() => [])
-	const prevMovies = useRef(() => [])
-	const myContainer = useRef(null)
+	const [moviesSuggestion, setMoviesSuggestion] = useState(() => [])
+	const [totalResults, setTotalResults] = useState(() => 0)
+	const refTitle = useRef(() => "")
+	const myContainer = useRef(() => null)
+	const refMoviesSuggestion = useRef(() => [])
 
 	const handleChange = e => {
-		_title.current = e
+		refTitle.current = e
+	}
+
+	const renderPagination = () => {
+		let arr = []
+		if (totalResults) {
+			for (let i = 0; i < Math.ceil(totalResults / 10); i++) {
+				arr.push(i)
+			}
+		}
+		return arr
 	}
 
 	return (
@@ -23,7 +34,7 @@ function App() {
 				ref={myContainer}
 				onClick={e => {
 					if (e.target === myContainer.current) {
-						setPreviewMovies(() => [])
+						setMoviesSuggestion(() => [])
 					}
 				}}>
 				<Suspense fallback={<h1>Loading.... </h1>}>
@@ -36,14 +47,16 @@ function App() {
 					<SearchBox
 						onChange={handleChange}
 						setTitle={setTitle}
-						_title={_title}
+						refTitle={refTitle}
 						title={title}
 						setPage={setPage}
 						page={page}
 						setMovies={setMovies}
-						previewMovies={previewMovies}
-						setPreviewMovies={setPreviewMovies}
-						prevMovies={prevMovies}
+						moviesSuggestion={moviesSuggestion}
+						setMoviesSuggestion={setMoviesSuggestion}
+						refMoviesSuggestion={refMoviesSuggestion}
+						totalResults={totalResults}
+						setTotalResults={setTotalResults}
 					/>
 				</Suspense>
 
@@ -59,17 +72,23 @@ function App() {
 						})}
 				</div>
 				<div className='separator' style={{ backgroundColor: "#ffffff" }}></div>
-				<div>{movies.length === 0 ? "" : page}</div>
-				{movies.length === 0 ? (
-					""
-				) : (
-					<button
-						onClick={() => {
-							setPage(prevPage => prevPage + 1)
-						}}>
-						+
-					</button>
-				)}
+				<div className='pagination'>
+					{renderPagination().map(_page => {
+						return (
+							<button
+								className={page === _page ? "btn-pagination active" : "btn-pagination"}
+								onClick={() => {
+									if (page === _page) {
+										return
+									}
+									setPage(curr => curr - curr + _page)
+								}}
+								key={_page}>
+								{_page + 1}
+							</button>
+						)
+					})}
+				</div>
 				<div className='separator' style={{ backgroundColor: "#ffffff" }}></div>
 				<div className='separator' style={{ backgroundColor: "#ffffff" }}></div>
 				<div className='separator' style={{ backgroundColor: "#ffffff" }}></div>

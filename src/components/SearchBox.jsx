@@ -6,14 +6,15 @@ const MovieDetail = lazy(() => import("./MovieDetail"))
 const SearchBox = ({
 	onChange,
 	setTitle,
-	_title,
+	refTitle,
 	title,
 	setPage,
 	page,
 	setMovies,
-	prevMovies,
-	previewMovies,
-	setPreviewMovies,
+	refMoviesSuggestion,
+	moviesSuggestion,
+	setMoviesSuggestion,
+	setTotalResults,
 }) => {
 	const [preTitle, setPreTitle] = useState(() => "")
 	const [preMovie, setPreMovie] = useState(() => {})
@@ -25,78 +26,77 @@ const SearchBox = ({
 
 	const fetchResponse = useMemo(() => handleResponse, [])
 	const fetchError = useMemo(() => handleError, [])
-	const delay = useMemo(() =>
-		// ini harus di revisi lagi, pengkondisian dengan delay yang berbeda.
-		{
-			if (_title.current === title && _title.current === preTitle) {
-				delays(() => setPreTitle(() => _title.current), 0)
-			}
-			return delays(() => setPreTitle(() => _title.current), 1500)
-		}, [_title, preTitle, title])
+	const delay = useMemo(() => {
+		if (refTitle.current === title && refTitle.current === preTitle) {
+			delays(() => setPreTitle(() => refTitle.current), 0)
+		}
+		return delays(() => setPreTitle(() => refTitle.current), 1500)
+	}, [refTitle, preTitle, title])
 
 	useEffect(() => {
 		if (title.length !== 0 && preTitle === title) {
-			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&page=${page}`
+			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&page=${page + 1}`
 			let a = fetch(url.current)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
 				if (data.Error) {
-					prevMovies.current = []
+					refMoviesSuggestion.current = []
 				} else {
-					prevMovies.current = data.Search
-					setMovies(() => prevMovies.current)
+					refMoviesSuggestion.current = data.Search
+					setMovies(() => refMoviesSuggestion.current)
+					setTotalResults(curr => parseInt(data.totalResults) + (curr - curr))
 				}
 			})
 		} else if (preTitle.length !== 0 && title !== preTitle) {
 			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f`
-
 			let a = fetch(url.current)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
 				if (data.Error) {
-					prevMovies.current = []
+					refMoviesSuggestion.current = []
 				} else {
-					prevMovies.current = data.Search
-					setPreviewMovies(() => prevMovies.current)
+					refMoviesSuggestion.current = data.Search
+					setMoviesSuggestion(() => refMoviesSuggestion.current)
 				}
 			})
-		} else if (_title.current === title && _title.current === preTitle && title === preTitle) {
+		} else if (refTitle.current === title && refTitle.current === preTitle && title === preTitle) {
 			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f`
-
 			let a = fetch(url.current)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
 				if (data.Error) {
-					prevMovies.current = []
+					refMoviesSuggestion.current = []
 				} else {
-					prevMovies.current = data.Search
-					setPreviewMovies(() => prevMovies.current)
+					refMoviesSuggestion.current = data.Search
+					setMoviesSuggestion(() => refMoviesSuggestion.current)
+					setTotalResults(curr => parseInt(data.totalResults) + (curr - curr))
 				}
 			})
-		} else if (_title.length === 0 && preTitle.length === 0) {
-			prevMovies.current = []
+		} else if (refTitle.length === 0 && preTitle.length === 0) {
+			refMoviesSuggestion.current = []
 			setTitle(() => "")
 		}
 	}, [
-		_title,
+		refTitle,
 		fetchError,
 		fetchResponse,
 		page,
 		preTitle,
-		prevMovies,
+		refMoviesSuggestion,
 		setMovies,
-		setPreviewMovies,
+		setMoviesSuggestion,
 		setTitle,
 		title,
+		setTotalResults,
 	])
 
 	const renderSuggestions = () => {
-		if (previewMovies.length === 0) {
+		if (moviesSuggestion.length === 0) {
 			return null
 		}
 		return (
 			<ul className='search-preview show' ref={myPreview}>
-				{previewMovies.slice(0, 2).map(m => {
+				{moviesSuggestion.slice(0, 2).map(m => {
 					return (
 						<li className='movie-card' key={m.imdbID}>
 							<MovieDetail
@@ -111,10 +111,10 @@ const SearchBox = ({
 				<li className='cta' key='cta'>
 					<h4
 						onClick={e => {
-							setMovies(() => prevMovies.current)
+							setMovies(() => refMoviesSuggestion.current)
 							setTitle(() => preTitle)
-							setPreviewMovies(() => [])
-							setPage(currentPage => currentPage - currentPage + 1)
+							setMoviesSuggestion(() => [])
+							setPage(currentPage => currentPage - currentPage)
 						}}>
 						Lihat Lebih Banyak...
 					</h4>
@@ -132,10 +132,10 @@ const SearchBox = ({
 					onChange={e => onChange(e.target.value)}
 					onKeyDown={e => {
 						if (e.key === "Enter") {
-							setTitle(() => _title.current)
-							setPreTitle(() => _title.current)
-							setPage(() => 1)
-							setPreviewMovies(curr => curr.splice(0, curr.length))
+							setTitle(() => refTitle.current)
+							setPreTitle(() => refTitle.current)
+							setPage(currentPage => currentPage - currentPage)
+							setMoviesSuggestion(curr => curr.splice(0, curr.length))
 						}
 					}}
 					onKeyUp={delay}
