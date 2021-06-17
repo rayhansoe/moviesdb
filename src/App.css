@@ -258,3 +258,36 @@ input {
 	height: 100%;
 	border-radius: 8px;
 }
+
+.pagination {
+	display: flex;
+	gap: 8px;
+}
+
+.pagination .btn-pagination {
+	padding: 18px;
+	font-weight: 400;
+	font-size: 18px;
+	color: white;
+	background-color: #00a0fb;
+	border: 1px solid #00a0fb;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+.pagination .btn-pagination.active {
+	color: #00a0fb;
+	border: 1px solid #00a0fb;
+	background-color: white;
+	cursor: unset;
+}
+
+.pagination .btn-pagination.active:hover {
+	color: #00a0fb;
+	border: 1px solid #00a0fb;
+	background-color: white;
+}
+
+.pagination .btn-pagination:hover {
+	opacity: 0.8;
+}
