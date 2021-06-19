@@ -131,7 +131,7 @@ const SearchBox = ({
 					className='search-box'
 					onChange={e => onChange(e.target.value)}
 					onKeyDown={e => {
-						if (e.key === "Enter") {
+						if (e.key === "Enter" && e.target.value.length !== 0) {
 							setTitle(() => refTitle.current)
 							setPreTitle(() => refTitle.current)
 							setPage(currentPage => currentPage - currentPage)
