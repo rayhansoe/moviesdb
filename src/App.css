@@ -231,11 +231,29 @@ input {
 	font-weight: 400;
 }
 
-.title {
+.search-results-details {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	max-width: 520px;
+	text-align: center;
+	margin-bottom: 60px;
+	gap: 8px;
+}
+
+.search-results-details .title {
 	/* margin-top: 40px; */
 	font-size: 40px;
 	font-weight: 450;
-	margin-bottom: 72px;
+}
+
+.search-results-details p {
+	color: #6d6d6d;
+	font-weight: 300;
+}
+
+.search-results-details span {
+	font-weight: bold;
 }
 
 .container .movies-list {
@@ -245,7 +263,7 @@ input {
 	overflow: hidden;
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(auto, 280px));
-	grid-template-rows: repeat(auto-fit, minmax(auto, 400px));
+	grid-template-rows: repeat(auto-fit, minmax(auto, 456px));
 	grid-row-gap: 56px;
 	/* grid-column-gap: 20px; */
 	justify-content: space-between;
@@ -253,10 +271,25 @@ input {
 	padding: 0 18px;
 }
 
+.container .movies-list .movie {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: 16px;
+}
+
 .container .movies-list .movie img {
 	width: 100%;
 	height: 100%;
+	max-height: 400px;
 	border-radius: 8px;
+}
+
+.container .movies-list .movie .title {
+	font-size: 18px;
+	font-weight: normal;
+	margin: 0;
 }
 
 .pagination {
@@ -290,4 +323,26 @@ input {
 
 .pagination .btn-pagination:hover {
 	opacity: 0.8;
+}
+
+.dropdown-pagination {
+	display: flex;
+	gap: 8px;
+	letter-spacing: normal;
+	align-items: center;
+}
+
+.dropdown-pagination .dropdown {
+	padding: 16px;
+	font-size: 16px;
+	background-color: white;
+	border-radius: 4px;
+	border: 1px solid #b1b0b0;
+	cursor: pointer;
+}
+
+.dropdown-pagination .dropdown:hover {
+	/* background-color: #b1b0b0;
+	color: white; */
+	box-shadow: 0px 4px 21px 0px rgba(0, 0, 0, 13%);
 }
