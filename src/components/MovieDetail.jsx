@@ -20,7 +20,7 @@ const MovieDetail = ({ id, movie }) => {
 		<>
 			<img src={preMovie.Poster} alt='' className='poster' />
 			<div className='detail'>
-				<h3 className='movie-title'>{preMovie.Title}</h3>
+				<h3 className='movie-title'>{`${preMovie.Title} (${preMovie.Year})`}</h3>
 				<div className='sec1'>
 					<p className='imdb'>
 						imdb: <span>{preMovie.imdbRating}</span>
