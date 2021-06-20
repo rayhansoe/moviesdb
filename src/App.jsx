@@ -3,7 +3,7 @@ import React, { lazy, useState, Suspense, useRef } from "react"
 const Header = lazy(() => import("./components/Header"))
 const SearchBox = lazy(() => import("./components/SearchBox"))
 const MoviesList = lazy(() => import("./components/MoviesList"))
-const MovieDetail = lazy(() => import("./components/MovieDetail"))
+const MoviesSuggestion = lazy(() => import("./components/MoviesSuggestion"))
 const Pagination = lazy(() => import("./components/Pagination"))
 const SearchResultsDetails = lazy(() => import("./components/SearchResultsDetails"))
 
@@ -73,35 +73,21 @@ function App() {
 					/>
 				</Suspense>
 
-				{isActive && (
-					<ul className={moviesSuggestion.length ? "search-preview show" : "search-preview"}>
-						{moviesSuggestion.slice(0, 2).map(m => {
-							return (
-								<li className='movie-card' key={m.imdbID}>
-									<Suspense fallback={<h1>Loading.... </h1>}>
-										<MovieDetail
-											id={m.imdbID}
-											preMovie={preMovie}
-											setPreMovie={setPreMovie}
-											movie={movie}
-										/>
-									</Suspense>
-								</li>
-							)
-						})}
-						<li className='cta' key='cta'>
-							<h4
-								onClick={e => {
-									setMovies(() => refMoviesSuggestion.current)
-									setTitle(() => preTitle)
-									setIsActive(() => false)
-									setPage(currentPage => currentPage - currentPage)
-								}}>
-								Lihat Lebih Banyak...
-							</h4>
-						</li>
-					</ul>
-				)}
+				<Suspense fallback={<h1>Loading.... </h1>}>
+					<MoviesSuggestion
+						isActive={isActive}
+						moviesSuggestion={moviesSuggestion}
+						preMovie={preMovie}
+						preTitle={preTitle}
+						movie={movie}
+						setPreMovie={setPreMovie}
+						setMovies={setMovies}
+						setTitle={setTitle}
+						setIsActive={setIsActive}
+						setPage={setPage}
+						refMoviesSuggestion={refMoviesSuggestion}
+					/>
+				</Suspense>
 
 				<Suspense fallback={<h1>Loading.... </h1>}>
 					<SearchResultsDetails title={title} totalResults={totalResults} />
