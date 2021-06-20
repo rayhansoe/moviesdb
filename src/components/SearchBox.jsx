@@ -1,7 +1,6 @@
 import { delays } from "../tools/delays"
-import React, { useMemo, useState, useRef, useEffect, lazy } from "react"
+import React, { useMemo, useRef, useEffect } from "react"
 import { handleError, handleResponse } from "../tools/apiUtils"
-const MovieDetail = lazy(() => import("./MovieDetail"))
 
 const SearchBox = ({
 	onChange,
@@ -12,17 +11,15 @@ const SearchBox = ({
 	page,
 	setMovies,
 	refMoviesSuggestion,
-	moviesSuggestion,
 	setMoviesSuggestion,
 	setTotalResults,
+	isActive,
+	setIsActive,
+	preTitle,
+	setPreTitle,
 }) => {
-	const [preTitle, setPreTitle] = useState(() => "")
-	const [preMovie, setPreMovie] = useState(() => {})
-
 	const url = useRef(() => "")
 	const myInput = useRef(() => null)
-	const myPreview = useRef(() => null)
-	const movie = useRef(() => {})
 
 	const fetchResponse = useMemo(() => handleResponse, [])
 	const fetchError = useMemo(() => handleError, [])
@@ -30,33 +27,67 @@ const SearchBox = ({
 		if (refTitle.current === title && refTitle.current === preTitle) {
 			delays(() => setPreTitle(() => refTitle.current), 0)
 		}
-		return delays(() => setPreTitle(() => refTitle.current), 1500)
-	}, [refTitle, preTitle, title])
+		return delays(() => {
+			if (refTitle.current.length) {
+				setPreTitle(() => refTitle.current.trim())
+			}
+			return
+		}, 1000)
+	}, [refTitle, title, preTitle, setPreTitle])
 
 	useEffect(() => {
-		if (title.length !== 0 && preTitle === title) {
+		// Enter
+		if (title.length !== 0 && preTitle === title && page === 0) {
 			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&page=${page + 1}`
 			let a = fetch(url.current)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
 				if (data.Error) {
+					setTotalResults(curr => curr - curr)
 					refMoviesSuggestion.current = []
+					setMovies(curr => curr - curr)
+					setMoviesSuggestion(() => [])
 				} else {
 					refMoviesSuggestion.current = data.Search
 					setMovies(() => refMoviesSuggestion.current)
-					setTotalResults(curr => parseInt(data.totalResults) + (curr - curr))
+					setMoviesSuggestion(() => refMoviesSuggestion.current)
+					setTotalResults(curr => {
+						if (curr === "") {
+							return parseInt(curr + data.totalResults)
+						} else {
+							return parseInt(data.totalResults) + (curr - curr)
+						}
+					})
+				}
+			})
+		} else if (title.length !== 0 && preTitle === title && page !== 0) {
+			// Pagination
+			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&page=${page + 1}`
+			let a = fetch(url.current)
+			a = a.then(fetchResponse).catch(fetchError)
+			a.then(data => {
+				if (data.Error) {
+					setTotalResults(curr => curr - curr)
+					refMoviesSuggestion.current = []
+					setMovies(curr => curr - curr)
+				} else {
+					refMoviesSuggestion.current = data.Search
+					setMovies(() => refMoviesSuggestion.current)
 				}
 			})
 		} else if (preTitle.length !== 0 && title !== preTitle) {
+			// Search Suggestion
 			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f`
 			let a = fetch(url.current)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
 				if (data.Error) {
 					refMoviesSuggestion.current = []
+					setMoviesSuggestion(() => [])
 				} else {
 					refMoviesSuggestion.current = data.Search
 					setMoviesSuggestion(() => refMoviesSuggestion.current)
+					setIsActive(() => true)
 				}
 			})
 		} else if (refTitle.current === title && refTitle.current === preTitle && title === preTitle) {
@@ -69,7 +100,13 @@ const SearchBox = ({
 				} else {
 					refMoviesSuggestion.current = data.Search
 					setMoviesSuggestion(() => refMoviesSuggestion.current)
-					setTotalResults(curr => parseInt(data.totalResults) + (curr - curr))
+					setTotalResults(curr => {
+						if (curr === "") {
+							return parseInt(curr + data.totalResults)
+						} else {
+							return parseInt(data.totalResults) + (curr - curr)
+						}
+					})
 				}
 			})
 		} else if (refTitle.length === 0 && preTitle.length === 0) {
@@ -88,43 +125,14 @@ const SearchBox = ({
 		setTitle,
 		title,
 		setTotalResults,
+		setIsActive,
 	])
 
-	const renderSuggestions = () => {
-		if (moviesSuggestion.length === 0) {
-			return null
-		}
-		return (
-			<ul className='search-preview show' ref={myPreview}>
-				{moviesSuggestion.slice(0, 2).map(m => {
-					return (
-						<li className='movie-card' key={m.imdbID}>
-							<MovieDetail
-								id={m.imdbID}
-								preMovie={preMovie}
-								setPreMovie={setPreMovie}
-								movie={movie}
-							/>
-						</li>
-					)
-				})}
-				<li className='cta' key='cta'>
-					<h4
-						onClick={e => {
-							setMovies(() => refMoviesSuggestion.current)
-							setTitle(() => preTitle)
-							setMoviesSuggestion(() => [])
-							setPage(currentPage => currentPage - currentPage)
-						}}>
-						Lihat Lebih Banyak...
-					</h4>
-				</li>
-			</ul>
-		)
-	}
+	const onFocus = () => setIsActive(() => true)
 
 	return (
 		<>
+			{isActive && <div className='layer' onClick={() => setIsActive(() => false)}></div>}
 			<div className='search-section' ref={myInput}>
 				<input
 					type='text'
@@ -132,16 +140,18 @@ const SearchBox = ({
 					onChange={e => onChange(e.target.value)}
 					onKeyDown={e => {
 						if (e.key === "Enter" && e.target.value.length !== 0) {
-							setTitle(() => refTitle.current)
-							setPreTitle(() => refTitle.current)
+							setTitle(() => refTitle.current.trim())
+							setPreTitle(() => refTitle.current.trim())
 							setPage(currentPage => currentPage - currentPage)
-							setMoviesSuggestion(curr => curr.splice(0, curr.length))
+							// setMoviesSuggestion(curr => curr.splice(0, curr.length))
+							setIsActive(() => false)
 						}
 					}}
+					onFocus={onFocus}
 					onKeyUp={delay}
+					onClick={() => setIsActive(() => true)}
 					placeholder={"Search..."}
 				/>
-				{renderSuggestions()}
 			</div>
 		</>
 	)
