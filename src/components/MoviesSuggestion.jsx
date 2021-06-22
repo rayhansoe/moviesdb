@@ -1,5 +1,5 @@
 import React, { Suspense, lazy } from "react"
-const MovieDetail = lazy(() => import("./MovieDetail"))
+const MoviePreview = lazy(() => import("./MoviePreview"))
 
 const MoviesSuggestion = ({
 	isActive,
@@ -21,7 +21,7 @@ const MoviesSuggestion = ({
 					return (
 						<li className='movie-card' key={m.imdbID}>
 							<Suspense fallback={<h1>Loading.... </h1>}>
-								<MovieDetail
+								<MoviePreview
 									id={m.imdbID}
 									preMovie={preMovie}
 									setPreMovie={setPreMovie}
