@@ -6,6 +6,10 @@ const MoviesList = ({ movies }) => {
 					<div className='movie' key={movie.imdbID}>
 						<img src={movie.Poster} alt='' />
 						<p className='title'>{`${movie.Title} (${movie.Year})`}</p>
+						<div
+							className='card-layer'
+							data-imdbid={movie.imdbID}
+							onClick={e => console.log(e.target.dataset.imdbid)}></div>
 					</div>
 				)
 			})
