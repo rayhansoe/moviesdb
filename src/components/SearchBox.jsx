@@ -38,7 +38,9 @@ const SearchBox = ({
 	useEffect(() => {
 		// Enter
 		if (title.length !== 0 && preTitle === title && page === 0) {
-			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&page=${page + 1}`
+			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&type=movie&page=${
+				page + 1
+			}`
 			let a = fetch(url.current)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
@@ -62,7 +64,9 @@ const SearchBox = ({
 			})
 		} else if (title.length !== 0 && preTitle === title && page !== 0) {
 			// Pagination
-			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&page=${page + 1}`
+			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&type=movie&page=${
+				page + 1
+			}`
 			let a = fetch(url.current)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
@@ -77,7 +81,7 @@ const SearchBox = ({
 			})
 		} else if (preTitle.length !== 0 && title !== preTitle) {
 			// Search Suggestion
-			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f`
+			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&type=movie`
 			let a = fetch(url.current)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
@@ -91,7 +95,7 @@ const SearchBox = ({
 				}
 			})
 		} else if (refTitle.current === title && refTitle.current === preTitle && title === preTitle) {
-			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f`
+			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&type=movie`
 			let a = fetch(url.current)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
