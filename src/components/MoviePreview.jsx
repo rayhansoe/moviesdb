@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react"
 import { getMovie } from "../tools/MovieApi"
 
-const MovieDetail = ({ id, movie }) => {
+const MoviePreview = ({ id, movie }) => {
 	const [preMovie, setPreMovie] = useState(() => {})
 	const getMovieApi = useMemo(() => getMovie, [])
 
@@ -29,8 +29,12 @@ const MovieDetail = ({ id, movie }) => {
 				</div>
 				<p className='duration'>{preMovie.Runtime}</p>
 			</div>
+			<div
+				className='card-layer'
+				data-imdbid={preMovie.imdbID}
+				onClick={e => console.log(e.target.dataset.imdbid)}></div>
 		</>
 	) : null
 }
 
-export default MovieDetail
+export default MoviePreview
