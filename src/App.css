@@ -128,11 +128,13 @@ input {
 	position: fixed;
 	height: 100%;
 	width: 100%;
+	background-color: #36363642;
+	z-index: 5;
 }
 
 .search-box {
 	position: relative;
-	z-index: 1;
+	z-index: 5;
 	border: 1px solid #eaeaea;
 	height: 72px;
 	width: 620px;
@@ -239,12 +241,15 @@ input {
 	top: 0;
 	left: 0;
 	cursor: pointer;
+	z-index: 4;
 }
 
 .search-preview .movie-card .poster {
 	width: 92px;
 	height: 128px;
 	border-radius: 4px;
+	z-index: 5;
+	cursor: pointer;
 }
 
 .search-preview .movie-card .detail {
@@ -256,11 +261,21 @@ input {
 .search-preview .movie-card .movie-title {
 	font-size: 18px;
 	font-weight: normal;
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
 }
 
 .search-preview .detail p {
 	font-size: 16px;
 	font-weight: 300;
+}
+
+.search-preview .detail p,
+.search-preview .movie-card .movie-title,
+.search-preview .detail .sec1 {
+	z-index: 999;
+	width: max-content;
 }
 
 .search-preview .detail p span {
@@ -337,6 +352,7 @@ input {
 	height: 100%;
 	max-height: 400px;
 	border-radius: 8px;
+	/* z-index: 2; */
 }
 
 .container .movies-list .movie .title {

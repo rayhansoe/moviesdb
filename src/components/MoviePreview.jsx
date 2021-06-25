@@ -1,8 +1,10 @@
-import React, { useEffect, useMemo, useState } from "react"
+import React, { useEffect, useMemo, useState, useRef } from "react"
 import { getMovie } from "../tools/MovieApi"
 
 const MoviePreview = ({ id, movie }) => {
 	const [preMovie, setPreMovie] = useState(() => {})
+	const cardLayer = useRef(null)
+	const movieTitle = useRef(null)
 	const getMovieApi = useMemo(() => getMovie, [])
 
 	useEffect(() => {
@@ -16,23 +18,28 @@ const MoviePreview = ({ id, movie }) => {
 		return
 	}, [getMovieApi, id, movie, setPreMovie])
 
+	const handleClick = () => console.log(cardLayer.current.dataset.imdbid)
+
 	return preMovie ? (
 		<>
-			<img src={preMovie.Poster} alt='' className='poster' />
+			<img src={preMovie.Poster} alt='poster' className='poster' onClick={handleClick} />
 			<div className='detail'>
-				<h3 className='movie-title'>{`${preMovie.Title} (${preMovie.Year})`}</h3>
+				<h3 className='movie-title' ref={movieTitle} onClick={handleClick}>
+					{`${preMovie.Title} (${preMovie.Year})`}{" "}
+				</h3>
 				<div className='sec1'>
-					<p className='imdb'>
+					<p>
 						imdb: <span>{preMovie.imdbRating}</span>
 					</p>
-					<p className='category'>{preMovie.Genre}</p>
+					<p>{preMovie.Genre}</p>
 				</div>
 				<p className='duration'>{preMovie.Runtime}</p>
 			</div>
 			<div
 				className='card-layer'
 				data-imdbid={preMovie.imdbID}
-				onClick={e => console.log(e.target.dataset.imdbid)}></div>
+				ref={cardLayer}
+				onClick={handleClick}></div>
 		</>
 	) : null
 }
