@@ -1,15 +1,23 @@
-const MoviesList = ({ movies }) => {
+const MoviesList = ({ movies, onClick, setImdbID }) => {
+	const handleClick = id => {
+		onClick()
+		setImdbID(() => id)
+	}
+
 	const renderMoviesList = () => {
 		if (movies) {
 			return movies.map(movie => {
 				return (
-					<div className='movie' key={movie.imdbID}>
-						<img src={movie.Poster} alt='' />
-						<p className='title'>{`${movie.Title} (${movie.Year})`}</p>
-						<div
-							className='card-layer'
-							data-imdbid={movie.imdbID}
-							onClick={e => console.log(e.target.dataset.imdbid)}></div>
+					<div className='movie' data-imdbid={movie.imdbID} key={movie.imdbID}>
+						<div className='card-layer' onClick={() => handleClick(movie.imdbID)}></div>
+						<img
+							src={movie.Poster}
+							alt={`${movie.Title} (${movie.Year}) Poster`}
+							onClick={() => handleClick(movie.imdbID)}
+						/>
+						<p
+							className='title'
+							onClick={() => handleClick(movie.imdbID)}>{`${movie.Title} (${movie.Year})`}</p>
 					</div>
 				)
 			})
