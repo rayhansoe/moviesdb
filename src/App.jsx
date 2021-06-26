@@ -1,26 +1,42 @@
 import "./App.css"
-import React, { lazy, useState, Suspense, useRef } from "react"
+import React, { lazy, useState, Suspense, useRef, useEffect } from "react"
+
 const Header = lazy(() => import("./components/Header"))
 const SearchBox = lazy(() => import("./components/SearchBox"))
 const MoviesList = lazy(() => import("./components/MoviesList"))
 const MoviesSuggestion = lazy(() => import("./components/MoviesSuggestion"))
 const Pagination = lazy(() => import("./components/Pagination"))
 const SearchResultsDetails = lazy(() => import("./components/SearchResultsDetails"))
+const ModalMovie = lazy(() => import("./components/ModalMovie"))
 
 function App() {
 	const [page, setPage] = useState(() => 0)
 	const [title, setTitle] = useState(() => "")
 	const [movies, setMovies] = useState(() => [])
+	const [imdbID, setImdbID] = useState(() => "")
+	const [isOpen, setIsOpen] = useState(() => false)
 	const [preTitle, setPreTitle] = useState(() => "")
 	const [preMovie, setPreMovie] = useState(() => {})
 	const [isActive, setIsActive] = useState(() => false)
 	const [totalResults, setTotalResults] = useState(() => "")
 	const [moviesSuggestion, setMoviesSuggestion] = useState(() => [])
 
-	const movie = useRef(() => {})
 	const refTitle = useRef(() => "")
 	const myContainer = useRef(() => null)
+	const movieSuggestion = useRef(() => {})
 	const refMoviesSuggestion = useRef(() => [])
+
+	useEffect(() => {
+		if (isOpen) {
+			myContainer.current.parentNode.parentNode.style.overflowX = "hidden"
+			myContainer.current.parentNode.parentNode.style.overflowY = "hidden"
+			myContainer.current.parentNode.nextSibling.nextSibling.style.zIndex = 5555
+		} else if (!isOpen) {
+			myContainer.current.parentNode.parentNode.style.overflowX = "auto"
+			myContainer.current.parentNode.parentNode.style.overflowY = "auto"
+			myContainer.current.parentNode.nextSibling.nextSibling.style.zIndex = -1
+		}
+	}, [isOpen])
 
 	const handleChange = e => {
 		refTitle.current = e
@@ -42,6 +58,9 @@ function App() {
 			</>
 		)
 	}
+
+	const onClick = () => setIsOpen(() => true)
+	const onClose = () => setIsOpen(() => false)
 
 	return (
 		<>
@@ -79,7 +98,7 @@ function App() {
 						moviesSuggestion={moviesSuggestion}
 						preMovie={preMovie}
 						preTitle={preTitle}
-						movie={movie}
+						movie={movieSuggestion}
 						setPreMovie={setPreMovie}
 						setMovies={setMovies}
 						setTitle={setTitle}
@@ -95,7 +114,13 @@ function App() {
 
 				{/* need to fix movies-list fail fetch*/}
 				<Suspense fallback={<h1>Loading.... </h1>}>
-					<MoviesList movies={movies} />
+					<MoviesList
+						movies={movies}
+						open={isOpen}
+						onClick={onClick}
+						onClose={onClose}
+						setImdbID={setImdbID}
+					/>
 				</Suspense>
 
 				{(totalResults || movies === []) && (
@@ -108,6 +133,10 @@ function App() {
 
 				{renderSeparators()}
 			</div>
+
+			<Suspense fallback={<div></div>}>
+				<ModalMovie open={isOpen} onClose={onClose} movie={imdbID} onClick={onClick} />
+			</Suspense>
 		</>
 	)
 }
