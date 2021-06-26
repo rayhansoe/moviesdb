@@ -15,22 +15,22 @@ const MoviesSuggestion = ({
 	refMoviesSuggestion,
 }) => {
 	return (
-		isActive && (
-			<ul className={moviesSuggestion.length ? "search-preview show" : "search-preview"}>
-				{moviesSuggestion.slice(0, 2).map(m => {
-					return (
-						<li className='movie-card' key={m.imdbID}>
-							<Suspense fallback={<h1>Loading.... </h1>}>
-								<MoviePreview
-									id={m.imdbID}
-									preMovie={preMovie}
-									setPreMovie={setPreMovie}
-									movie={movie}
-								/>
-							</Suspense>
-						</li>
-					)
-				})}
+		<ul className={moviesSuggestion.length && isActive ? "search-preview show" : "search-preview"}>
+			{moviesSuggestion.slice(0, 2).map(m => {
+				return (
+					<li className='movie-card' key={m.imdbID}>
+						<Suspense fallback={<h1>Loading.... </h1>}>
+							<MoviePreview
+								id={m.imdbID}
+								preMovie={preMovie}
+								setPreMovie={setPreMovie}
+								movie={movie}
+							/>
+						</Suspense>
+					</li>
+				)
+			})}
+			{moviesSuggestion.length && (
 				<li className='cta' key='cta'>
 					<h4
 						onClick={e => {
@@ -42,8 +42,8 @@ const MoviesSuggestion = ({
 						Lihat Lebih Banyak...
 					</h4>
 				</li>
-			</ul>
-		)
+			)}
+		</ul>
 	)
 }
 
