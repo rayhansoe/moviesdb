@@ -135,7 +135,7 @@ function App() {
 			</div>
 
 			<Suspense fallback={<div></div>}>
-				<ModalMovie open={isOpen} onClose={onClose} movie={imdbID} onClick={onClick} />
+				<ModalMovie open={isOpen} onClose={onClose} imdbID={imdbID} onClick={onClick} />
 			</Suspense>
 		</>
 	)
