@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, useRef } from "react"
 import { getMovie } from "../tools/MovieApi"
 
-const MoviePreview = ({ id, movie }) => {
+const MoviePreview = ({ id, movie, onClick, setImdbID }) => {
 	const [preMovie, setPreMovie] = useState(() => {})
 	const cardLayer = useRef(null)
 	const movieTitle = useRef(null)
@@ -18,28 +18,45 @@ const MoviePreview = ({ id, movie }) => {
 		return
 	}, [getMovieApi, id, movie, setPreMovie])
 
-	const handleClick = () => console.log(cardLayer.current.dataset.imdbid)
+	const handleClick = id => {
+		onClick()
+		setImdbID(id)
+	}
 
 	return preMovie ? (
 		<>
-			<img src={preMovie.Poster} alt='poster' className='poster' onClick={handleClick} />
+			<img
+				src={`https://image.tmdb.org/t/p/w200/${preMovie.poster_path}`}
+				data-id={preMovie.id}
+				alt={`${preMovie.title} (${preMovie.release_date.slice(0, 4)}) poster`}
+				className='poster'
+				onClick={() => handleClick(preMovie.id)}
+			/>
 			<div className='detail'>
-				<h3 className='movie-title' ref={movieTitle} onClick={handleClick}>
-					{`${preMovie.Title} (${preMovie.Year})`}{" "}
+				<h3
+					className='movie-title'
+					ref={movieTitle}
+					data-id={preMovie.id}
+					onClick={() => handleClick(preMovie.id)}>
+					{`${preMovie.title} (${preMovie.release_date.slice(0, 4)})`}
 				</h3>
-				<div className='sec1'>
+				<div className='sec1' onClick={() => handleClick(preMovie.id)} data-id={preMovie.id}>
 					<p>
-						imdb: <span>{preMovie.imdbRating}</span>
+						imdb: <span>{preMovie.vote_average}</span>
 					</p>
-					<p>{preMovie.Genre}</p>
+					<p>
+						{preMovie.genres.map(genre => {
+							return <span key={genre.id}>{`${genre.name} `}</span>
+						})}
+					</p>
 				</div>
-				<p className='duration'>{preMovie.Runtime}</p>
+				<p className='duration'>{preMovie.runtime} min</p>
 			</div>
 			<div
 				className='card-layer'
-				data-imdbid={preMovie.imdbID}
+				data-id={preMovie.id}
 				ref={cardLayer}
-				onClick={handleClick}></div>
+				onClick={() => handleClick(preMovie.id)}></div>
 		</>
 	) : null
 }

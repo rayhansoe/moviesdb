@@ -13,18 +13,22 @@ const MoviesSuggestion = ({
 	setIsActive,
 	setPage,
 	refMoviesSuggestion,
+	onClick,
+	setImdbID,
 }) => {
 	return (
 		<ul className={moviesSuggestion.length && isActive ? "search-preview show" : "search-preview"}>
 			{moviesSuggestion.slice(0, 2).map(m => {
 				return (
-					<li className='movie-card' key={m.imdbID}>
+					<li className='movie-card' key={m.id}>
 						<Suspense fallback={<h1>Loading.... </h1>}>
 							<MoviePreview
-								id={m.imdbID}
+								id={m.id}
 								preMovie={preMovie}
 								setPreMovie={setPreMovie}
 								movie={movie}
+								onClick={onClick}
+								setImdbID={setImdbID}
 							/>
 						</Suspense>
 					</li>
