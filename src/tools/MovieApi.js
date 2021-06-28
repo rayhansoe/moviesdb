@@ -1,11 +1,24 @@
 import { handleError, handleResponse } from "./apiUtils"
 let baseUrl
-let movieID
+// let movieID
 let Trailers
 
-export const getMovie = async imdbID => {
-	if (imdbID) {
-		baseUrl = `https://www.omdbapi.com/?i=${imdbID}&apikey=41eec44f`
+// export const getMovie = async imdbID => {
+// 	if (imdbID) {
+// 		baseUrl = `https://www.omdbapi.com/?i=${imdbID}&apikey=41eec44f`
+// 		try {
+// 			const response = await fetch(baseUrl)
+// 			return handleResponse(response)
+// 		} catch (error) {
+// 			return handleError(error)
+// 		}
+// 	}
+// }
+
+export const getMovie = async id => {
+	if (id) {
+		// baseUrl = `https://www.themoviedb.com/?i=${id}&apikey=41eec44f`
+		baseUrl = `https://api.themoviedb.org/3/movie/${id}?api_key=f363fbafab56237920b96af2c295f5e1`
 		try {
 			const response = await fetch(baseUrl)
 			return handleResponse(response)
@@ -27,25 +40,22 @@ export const getMovieByImdbID = async imdbID => {
 	}
 }
 
-export const getMovieVideos = async imdbID => {
-	if (imdbID) {
-		movieID = await getMovieByImdbID(imdbID).then(res => res.movie_results[0]?.id)
-		if (movieID) {
-			baseUrl = `https://api.themoviedb.org/3/movie/${movieID}/videos?api_key=f363fbafab56237920b96af2c295f5e1&language=en-US`
-			try {
-				const response = await fetch(baseUrl)
-				return handleResponse(response)
-			} catch (error) {
-				return handleError(error)
-			}
+export const getMovieVideos = async id => {
+	if (id) {
+		baseUrl = `https://api.themoviedb.org/3/movie/${id}/videos?api_key=f363fbafab56237920b96af2c295f5e1&language=en-US`
+		try {
+			const response = await fetch(baseUrl)
+			return handleResponse(response)
+		} catch (error) {
+			return handleError(error)
 		}
 	}
 	return
 }
 
-export const getMovieTrailers = async imdbID => {
-	if (imdbID) {
-		Trailers = await getMovieVideos(imdbID).then(res => res?.results)
+export const getMovieTrailers = async id => {
+	if (id) {
+		Trailers = await getMovieVideos(id).then(res => res?.results)
 		Trailers = Trailers.filter(vid => vid.type === "Trailer")
 		return Trailers
 	}
