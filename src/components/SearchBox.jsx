@@ -38,7 +38,7 @@ const SearchBox = ({
 	useEffect(() => {
 		// Enter
 		if (title.length !== 0 && preTitle === title && page === 0) {
-			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&type=movie&page=${
+			url.current = `https://api.themoviedb.org/3/search/movie?query=${preTitle}&api_key=f363fbafab56237920b96af2c295f5e1&page=${
 				page + 1
 			}`
 			let a = fetch(url.current)
@@ -50,21 +50,21 @@ const SearchBox = ({
 					setMovies(curr => curr - curr)
 					setMoviesSuggestion(() => [])
 				} else {
-					refMoviesSuggestion.current = data.Search
+					refMoviesSuggestion.current = data.results.filter(movie => movie.poster_path !== null)
 					setMovies(() => refMoviesSuggestion.current)
 					setMoviesSuggestion(() => refMoviesSuggestion.current)
 					setTotalResults(curr => {
 						if (curr === "") {
-							return parseInt(curr + data.totalResults)
+							return parseInt(curr + refMoviesSuggestion.current.length)
 						} else {
-							return parseInt(data.totalResults) + (curr - curr)
+							return parseInt(refMoviesSuggestion.current.length) + (curr - curr)
 						}
 					})
 				}
 			})
 		} else if (title.length !== 0 && preTitle === title && page !== 0) {
 			// Pagination
-			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&type=movie&page=${
+			url.current = `https://api.themoviedb.org/3/search/movie?query=${preTitle}&api_key=f363fbafab56237920b96af2c295f5e1&page=${
 				page + 1
 			}`
 			let a = fetch(url.current)
@@ -75,13 +75,13 @@ const SearchBox = ({
 					refMoviesSuggestion.current = []
 					setMovies(curr => curr - curr)
 				} else {
-					refMoviesSuggestion.current = data.Search
+					refMoviesSuggestion.current = data.results
 					setMovies(() => refMoviesSuggestion.current)
 				}
 			})
 		} else if (preTitle.length !== 0 && title !== preTitle) {
 			// Search Suggestion
-			url.current = `https://www.omdbapi.com/?s=${preTitle}&apikey=41eec44f&type=movie`
+			url.current = `https://api.themoviedb.org/3/search/movie?query=${preTitle}&api_key=f363fbafab56237920b96af2c295f5e1`
 			let a = fetch(url.current)
 			a = a.then(fetchResponse).catch(fetchError)
 			a.then(data => {
@@ -89,7 +89,7 @@ const SearchBox = ({
 					refMoviesSuggestion.current = []
 					setMoviesSuggestion(() => [])
 				} else {
-					refMoviesSuggestion.current = data.Search
+					refMoviesSuggestion.current = data.results
 					setMoviesSuggestion(() => refMoviesSuggestion.current)
 					setIsActive(() => true)
 				}
