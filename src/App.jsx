@@ -105,6 +105,8 @@ function App() {
 						setIsActive={setIsActive}
 						setPage={setPage}
 						refMoviesSuggestion={refMoviesSuggestion}
+						onClick={onClick}
+						setImdbID={setImdbID}
 					/>
 				</Suspense>
 

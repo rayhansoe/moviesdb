@@ -8,16 +8,17 @@ const MoviesList = ({ movies, onClick, setImdbID }) => {
 		if (movies) {
 			return movies.map(movie => {
 				return (
-					<div className='movie' data-imdbid={movie.imdbID} key={movie.imdbID}>
-						<div className='card-layer' onClick={() => handleClick(movie.imdbID)}></div>
+					<div className='movie' data-imdbid={movie.id} key={movie.id}>
+						<div className='card-layer' onClick={() => handleClick(movie.id)}></div>
 						<img
-							src={movie.Poster}
-							alt={`${movie.Title} (${movie.Year}) Poster`}
-							onClick={() => handleClick(movie.imdbID)}
+							className='poster'
+							src={`https://image.tmdb.org/t/p/w400/${movie.poster_path}`}
+							alt={`${movie.title} (${movie.release_date.slice(0, 4)}) Poster`}
+							onClick={() => handleClick(movie.id)}
 						/>
-						<p
-							className='title'
-							onClick={() => handleClick(movie.imdbID)}>{`${movie.Title} (${movie.Year})`}</p>
+						<p className='title' onClick={() => handleClick(movie.id)}>{`${
+							movie.title
+						} (${movie.release_date.slice(0, 4)})`}</p>
 					</div>
 				)
 			})
