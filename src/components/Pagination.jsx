@@ -1,8 +1,8 @@
-const Pagination = ({ totalResults, page, setPage }) => {
+const Pagination = ({ totalPages, page, setPage }) => {
 	const getArrPagination = () => {
 		let arr = []
-		if (totalResults) {
-			for (let i = 0; i < Math.ceil(totalResults / 10); i++) {
+		if (totalPages) {
+			for (let i = 0; i < totalPages; i++) {
 				arr.push(i)
 			}
 		}
@@ -10,7 +10,7 @@ const Pagination = ({ totalResults, page, setPage }) => {
 	}
 
 	const renderPagination = () => {
-		if (Math.ceil(totalResults / 10) > 20) {
+		if (totalPages > 20) {
 			return (
 				<div className='dropdown-pagination'>
 					<p>Page: </p>
@@ -31,7 +31,7 @@ const Pagination = ({ totalResults, page, setPage }) => {
 							)
 						})}
 					</select>
-					<p> of {Math.ceil(totalResults / 10)}</p>
+					<p> of {totalPages}</p>
 				</div>
 			)
 		}
