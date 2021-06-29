@@ -13,6 +13,7 @@ const SearchBox = ({
 	refMoviesSuggestion,
 	setMoviesSuggestion,
 	setTotalResults,
+	setTotalPages,
 	isActive,
 	setIsActive,
 	preTitle,
@@ -50,14 +51,21 @@ const SearchBox = ({
 					setMovies(curr => curr - curr)
 					setMoviesSuggestion(() => [])
 				} else {
-					refMoviesSuggestion.current = data.results.filter(movie => movie.poster_path !== null)
+					refMoviesSuggestion.current = data.results
 					setMovies(() => refMoviesSuggestion.current)
 					setMoviesSuggestion(() => refMoviesSuggestion.current)
 					setTotalResults(curr => {
 						if (curr === "") {
-							return parseInt(curr + refMoviesSuggestion.current.length)
+							return parseInt(curr + data.total_results)
 						} else {
-							return parseInt(refMoviesSuggestion.current.length) + (curr - curr)
+							return parseInt(data.total_results) + (curr - curr)
+						}
+					})
+					setTotalPages(curr => {
+						if (curr === "") {
+							return parseInt(curr + data.total_pages)
+						} else {
+							return parseInt(data.total_pages) + (curr - curr)
 						}
 					})
 				}
@@ -130,6 +138,7 @@ const SearchBox = ({
 		title,
 		setTotalResults,
 		setIsActive,
+		setTotalPages,
 	])
 
 	const onFocus = () => setIsActive(() => true)
