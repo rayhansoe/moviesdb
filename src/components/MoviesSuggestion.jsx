@@ -34,7 +34,7 @@ const MoviesSuggestion = ({
 					</li>
 				)
 			})}
-			{moviesSuggestion.length && (
+			{!moviesSuggestion.length ? null : (
 				<li className='cta' key='cta'>
 					<h4
 						onClick={e => {
