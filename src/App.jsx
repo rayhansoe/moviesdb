@@ -19,6 +19,7 @@ function App() {
 	const [preMovie, setPreMovie] = useState(() => {})
 	const [isActive, setIsActive] = useState(() => false)
 	const [totalResults, setTotalResults] = useState(() => "")
+	const [totalPages, setTotalPages] = useState(() => "")
 	const [moviesSuggestion, setMoviesSuggestion] = useState(() => [])
 
 	const refTitle = useRef(() => "")
@@ -85,6 +86,8 @@ function App() {
 						refMoviesSuggestion={refMoviesSuggestion}
 						totalResults={totalResults}
 						setTotalResults={setTotalResults}
+						totalPages={totalPages}
+						setTotalPages={setTotalPages}
 						isActive={isActive}
 						setIsActive={setIsActive}
 						preTitle={preTitle}
@@ -120,7 +123,7 @@ function App() {
 						movies={movies}
 						open={isOpen}
 						onClick={onClick}
-						onClose={onClose}
+						title={title}
 						setImdbID={setImdbID}
 					/>
 				</Suspense>
@@ -130,7 +133,7 @@ function App() {
 				)}
 
 				<Suspense fallback={<h1>Loading.... </h1>}>
-					<Pagination page={page} setPage={setPage} totalResults={totalResults} />
+					<Pagination page={page} setPage={setPage} totalPages={totalPages} />
 				</Suspense>
 
 				{renderSeparators()}
