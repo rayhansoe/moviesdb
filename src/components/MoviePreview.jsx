@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState, useRef } from "react"
-import { getMovie } from "../tools/MovieApi"
+import { getMovieById } from "../tools/MovieApi"
 
-const MoviePreview = ({ id, movie, onClick, setImdbID }) => {
+const MoviePreview = ({ id, movie, onClick, setMovieId }) => {
 	const [preMovie, setPreMovie] = useState(() => {})
 	const cardLayer = useRef(null)
 	const movieTitle = useRef(null)
-	const getMovieApi = useMemo(() => getMovie, [])
+	const getMovieApi = useMemo(() => getMovieById, [])
 
 	useEffect(() => {
 		getMovieApi(id).then(res => {
@@ -20,7 +20,7 @@ const MoviePreview = ({ id, movie, onClick, setImdbID }) => {
 
 	const handleClick = id => {
 		onClick()
-		setImdbID(id)
+		setMovieId(id)
 	}
 
 	return preMovie ? (
