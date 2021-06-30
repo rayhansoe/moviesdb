@@ -14,7 +14,7 @@ const MoviesSuggestion = ({
 	setPage,
 	refMoviesSuggestion,
 	onClick,
-	setImdbID,
+	setMovieId,
 }) => {
 	return (
 		<ul className={moviesSuggestion.length && isActive ? "search-preview show" : "search-preview"}>
@@ -28,7 +28,7 @@ const MoviesSuggestion = ({
 								setPreMovie={setPreMovie}
 								movie={movie}
 								onClick={onClick}
-								setImdbID={setImdbID}
+								setMovieId={setMovieId}
 							/>
 						</Suspense>
 					</li>
