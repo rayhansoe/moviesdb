@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState, useRef } from "react"
-import { getMovieById } from "../tools/MovieApi"
+import { MovieById } from "../tools/MovieApi"
 
 const MoviePreview = ({ id, movie, onClick, setMovieId }) => {
 	const [preMovie, setPreMovie] = useState(() => {})
 	const cardLayer = useRef(null)
 	const movieTitle = useRef(null)
-	const getMovieApi = useMemo(() => getMovieById, [])
+	const getMovieApi = useMemo(() => MovieById, [])
 
 	useEffect(() => {
 		getMovieApi(id).then(res => {
@@ -38,11 +38,11 @@ const MoviePreview = ({ id, movie, onClick, setMovieId }) => {
 					ref={movieTitle}
 					data-id={preMovie.id}
 					onClick={() => handleClick(preMovie.id)}>
-					{`${preMovie.title} (${preMovie.release_date.slice(0, 4)})`}
+					{`${preMovie.title} ${movie.release_date ? `(${movie.release_date.slice(0, 4)})` : ""}`}
 				</h3>
 				<div className='sec1' onClick={() => handleClick(preMovie.id)} data-id={preMovie.id}>
 					<p>
-						imdb: <span>{preMovie.vote_average}</span>
+						imdb: <span className='rating'>{preMovie.vote_average}</span>
 					</p>
 					<p>
 						{preMovie.genres.map(genre => {
