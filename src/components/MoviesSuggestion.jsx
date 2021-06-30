@@ -18,9 +18,15 @@ const MoviesSuggestion = ({
 }) => {
 	return (
 		<ul className={moviesSuggestion.length && isActive ? "search-preview show" : "search-preview"}>
-			{moviesSuggestion.slice(0, 2).map(m => {
+			{moviesSuggestion.slice(0, 2).map((m, i, self) => {
 				return (
-					<li className='movie-card' key={m.id}>
+					<li
+						className='movie-card'
+						style={{
+							borderTopRightRadius: self.length - 1 === i ? "" : "10px",
+							borderTopLeftRadius: self.length - 1 === i ? "" : "10px",
+						}}
+						key={m.id}>
 						<Suspense fallback={<h1>Loading.... </h1>}>
 							<MoviePreview
 								id={m.id}
