@@ -1,23 +1,9 @@
 import { handleError, handleResponse } from "./apiUtils"
 let baseUrl
-// let movieID
 let Trailers
 
-// export const getMovie = async imdbID => {
-// 	if (imdbID) {
-// 		baseUrl = `https://www.omdbapi.com/?i=${imdbID}&apikey=41eec44f`
-// 		try {
-// 			const response = await fetch(baseUrl)
-// 			return handleResponse(response)
-// 		} catch (error) {
-// 			return handleError(error)
-// 		}
-// 	}
-// }
-
-export const getMovie = async id => {
+export const getMovieById = async id => {
 	if (id) {
-		// baseUrl = `https://www.themoviedb.com/?i=${id}&apikey=41eec44f`
 		baseUrl = `https://api.themoviedb.org/3/movie/${id}?api_key=f363fbafab56237920b96af2c295f5e1`
 		try {
 			const response = await fetch(baseUrl)
