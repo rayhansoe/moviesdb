@@ -1,7 +1,7 @@
-const MoviesList = ({ movies, onClick, setImdbID, title }) => {
+const MoviesList = ({ movies, onClick, setMovieId, title }) => {
 	const handleClick = id => {
 		onClick()
-		setImdbID(() => id)
+		setMovieId(() => id)
 	}
 
 	const renderMoviesList = () => {
