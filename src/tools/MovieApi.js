@@ -2,7 +2,7 @@ import { handleError, handleResponse } from "./apiUtils"
 let baseUrl
 let Trailers
 
-export const getMovieById = async id => {
+export const MovieById = async id => {
 	if (id) {
 		baseUrl = `https://api.themoviedb.org/3/movie/${id}?api_key=f363fbafab56237920b96af2c295f5e1`
 		try {
@@ -14,7 +14,7 @@ export const getMovieById = async id => {
 	}
 }
 
-export const getMovieByImdbID = async imdbID => {
+export const MovieByImdbID = async imdbID => {
 	if (imdbID) {
 		baseUrl = `https://api.themoviedb.org/3/find/${imdbID}?api_key=f363fbafab56237920b96af2c295f5e1&external_source=imdb_id`
 		try {
@@ -26,7 +26,7 @@ export const getMovieByImdbID = async imdbID => {
 	}
 }
 
-export const getMovieVideos = async id => {
+export const MovieVideos = async id => {
 	if (id) {
 		baseUrl = `https://api.themoviedb.org/3/movie/${id}/videos?api_key=f363fbafab56237920b96af2c295f5e1&language=en-US`
 		try {
@@ -39,11 +39,24 @@ export const getMovieVideos = async id => {
 	return
 }
 
-export const getMovieTrailers = async id => {
+export const MovieTrailers = async id => {
 	if (id) {
-		Trailers = await getMovieVideos(id).then(res => res?.results)
+		Trailers = await MovieVideos(id).then(res => res?.results)
 		Trailers = Trailers.filter(vid => vid.type === "Trailer")
 		return Trailers
+	}
+	return
+}
+
+export const MovieCredits = async id => {
+	if (id) {
+		baseUrl = `https://api.themoviedb.org/3/movie/${id}/credits?api_key=f363fbafab56237920b96af2c295f5e1`
+		try {
+			const response = await fetch(baseUrl)
+			return handleResponse(response)
+		} catch (error) {
+			return handleError(error)
+		}
 	}
 	return
 }
