@@ -70,9 +70,9 @@ const SearchBox = ({
 					})
 				}
 			})
-		} else if (title.length !== 0 && preTitle === title && page !== 0) {
+		} else if (title.length !== 0 && title && page !== 0) {
 			// Pagination
-			url.current = `https://api.themoviedb.org/3/search/movie?query=${preTitle}&api_key=f363fbafab56237920b96af2c295f5e1&page=${
+			url.current = `https://api.themoviedb.org/3/search/movie?query=${title}&api_key=f363fbafab56237920b96af2c295f5e1&page=${
 				page + 1
 			}`
 			let a = fetch(url.current)
