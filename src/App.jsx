@@ -13,7 +13,7 @@ function App() {
 	const [page, setPage] = useState(() => 0)
 	const [title, setTitle] = useState(() => "")
 	const [movies, setMovies] = useState(() => [])
-	const [imdbID, setImdbID] = useState(() => "")
+	const [movieId, setMovieId] = useState(() => "")
 	const [isOpen, setIsOpen] = useState(() => false)
 	const [preTitle, setPreTitle] = useState(() => "")
 	const [preMovie, setPreMovie] = useState(() => {})
@@ -66,13 +66,14 @@ function App() {
 	return (
 		<>
 			<div className='container' ref={myContainer}>
+				{/* Header */}
 				<Suspense fallback={<h1>Loading.... </h1>}>
 					<Header />
 				</Suspense>
 
 				<div className='separator'></div>
 
-				{/* need to fix search preview fail fetch*/}
+				{/* SearchBox */}
 				<Suspense fallback={<h1>Loading.... </h1>}>
 					<SearchBox
 						onChange={handleChange}
@@ -95,6 +96,7 @@ function App() {
 					/>
 				</Suspense>
 
+				{/* MoviesSuggestion */}
 				<Suspense fallback={<h1>Loading.... </h1>}>
 					<MoviesSuggestion
 						isActive={isActive}
@@ -109,22 +111,23 @@ function App() {
 						setPage={setPage}
 						refMoviesSuggestion={refMoviesSuggestion}
 						onClick={onClick}
-						setImdbID={setImdbID}
+						setMovieId={setMovieId}
 					/>
 				</Suspense>
 
+				{/* SearchResultsDetails */}
 				<Suspense fallback={<h1>Loading.... </h1>}>
 					<SearchResultsDetails title={title} totalResults={totalResults} />
 				</Suspense>
 
-				{/* need to fix movies-list fail fetch*/}
+				{/* MoviesList */}
 				<Suspense fallback={<h1>Loading.... </h1>}>
 					<MoviesList
 						movies={movies}
 						open={isOpen}
 						onClick={onClick}
 						title={title}
-						setImdbID={setImdbID}
+						setMovieId={setMovieId}
 					/>
 				</Suspense>
 
@@ -132,6 +135,7 @@ function App() {
 					<div className='separator' style={{ backgroundColor: "#ffffff" }}></div>
 				)}
 
+				{/* Pagination */}
 				<Suspense fallback={<h1>Loading.... </h1>}>
 					<Pagination page={page} setPage={setPage} totalPages={totalPages} />
 				</Suspense>
@@ -139,8 +143,9 @@ function App() {
 				{renderSeparators()}
 			</div>
 
+			{/* ModalMovie */}
 			<Suspense fallback={<div></div>}>
-				<ModalMovie open={isOpen} onClose={onClose} imdbID={imdbID} onClick={onClick} />
+				<ModalMovie open={isOpen} onClose={onClose} movieId={movieId} onClick={onClick} />
 			</Suspense>
 		</>
 	)
