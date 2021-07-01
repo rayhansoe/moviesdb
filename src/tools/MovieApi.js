@@ -60,3 +60,17 @@ export const MovieCredits = async id => {
 	}
 	return
 }
+
+export const MovieRecommandations = async id => {
+	if (id) {
+		baseUrl = `https://api.themoviedb.org/3/movie/${id}/recommendations?api_key=f363fbafab56237920b96af2c295f5e1`
+		console.log(baseUrl)
+		try {
+			const response = await fetch(baseUrl)
+			return handleResponse(response)
+		} catch (error) {
+			return handleError(error)
+		}
+	}
+	return
+}
