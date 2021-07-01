@@ -145,7 +145,13 @@ function App() {
 
 			{/* ModalMovie */}
 			<Suspense fallback={<div></div>}>
-				<ModalMovie open={isOpen} onClose={onClose} movieId={movieId} onClick={onClick} />
+				<ModalMovie
+					open={isOpen}
+					onClose={onClose}
+					movieId={movieId}
+					onClick={onClick}
+					setMovieId={setMovieId}
+				/>
 			</Suspense>
 		</>
 	)
