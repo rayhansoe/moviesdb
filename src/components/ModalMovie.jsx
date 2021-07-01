@@ -1,18 +1,21 @@
 import { createPortal } from "react-dom"
-import React, { useMemo, useEffect, useRef, useState } from "react"
-import { MovieTrailers, MovieById, MovieCredits } from "../tools/MovieApi"
+import React, { useMemo, useEffect, useRef, useState, lazy } from "react"
+import { MovieTrailers, MovieById, MovieCredits, MovieRecommandations } from "../tools/MovieApi"
+const MoviesList = lazy(() => import("./MoviesList"))
 
-const ModalMovie = ({ open, onClose, movieId }) => {
+const ModalMovie = ({ open, onClose, movieId, onClick, setMovieId }) => {
 	const [movie, setMovie] = useState(() => {})
 	const [casts, setCasts] = useState(() => [])
 	const [crews, setCrews] = useState(() => [])
 	const [movieTrailers, setMovieTrailers] = useState(() => {})
+	const [movieRecommandations, setMovieRecommandations] = useState(() => [])
 
 	const refMovieTrailers = useRef(() => null)
 
 	const getMovie = useMemo(() => MovieById, [])
 	const getMovieVideos = useMemo(() => MovieTrailers, [])
 	const getMovieCredits = useMemo(() => MovieCredits, [])
+	const getMovieRecommandations = useMemo(() => MovieRecommandations, [])
 
 	useEffect(() => {
 		if (open) {
@@ -42,9 +45,23 @@ const ModalMovie = ({ open, onClose, movieId }) => {
 				}
 				return
 			})
+
+			getMovieRecommandations(movieId).then(res => {
+				if (res) {
+					setMovieRecommandations(() => res.results.slice(0, 4))
+				}
+			})
 		}
 		return
-	}, [getMovie, getMovieCredits, getMovieVideos, movieId, open, refMovieTrailers])
+	}, [
+		getMovie,
+		getMovieCredits,
+		getMovieRecommandations,
+		getMovieVideos,
+		movieId,
+		open,
+		refMovieTrailers,
+	])
 
 	const handleClose = () => {
 		refMovieTrailers.current = []
@@ -218,21 +235,41 @@ const ModalMovie = ({ open, onClose, movieId }) => {
 		)
 	}
 
-	const renderTrailers = () => {
-		return movieTrailers ? (
-			<iframe
-				className='content'
-				width='1080'
-				height='620'
-				title='avengers'
-				src={movieTrailers}
-				allowFullScreen>
-				{console.log()}
-			</iframe>
-		) : (
-			""
-		)
-	}
+	const renderTrailers = useMemo(
+		() => () => {
+			return movieTrailers ? (
+				<iframe
+					className='content'
+					width='1080'
+					height='620'
+					title='avengers'
+					src={movieTrailers}
+					allowFullScreen></iframe>
+			) : (
+				""
+			)
+		},
+		[movieTrailers]
+	)
+
+	const renderMovieRecommandations = useMemo(
+		() => () => {
+			return movieRecommandations.length ? (
+				<div className='movie-recommandations'>
+					<h3>Recommandations</h3>
+					<MoviesList
+						movies={movieRecommandations}
+						onClick={onClick}
+						setMovieId={setMovieId}
+						type='recommandations'
+					/>
+				</div>
+			) : (
+				""
+			)
+		},
+		[movieRecommandations, onClick, setMovieId]
+	)
 
 	return createPortal(
 		<>
@@ -240,7 +277,9 @@ const ModalMovie = ({ open, onClose, movieId }) => {
 				<div className={open ? "modal-movie visible" : "modal-movie"}>
 					<div className='layer' onClick={handleClose}></div>
 					<div className='modal-content'>
-						<div className='title'>{renderTitle()}</div>
+						<div id='modal-title' className='title'>
+							{renderTitle()}
+						</div>
 						{/* need to fix CORS or something... */}
 						{renderTrailers()}
 						<div className='movie-details'>
@@ -251,6 +290,7 @@ const ModalMovie = ({ open, onClose, movieId }) => {
 							{renderWriters()}
 							{renderStars()}
 						</div>
+						{renderMovieRecommandations()}
 					</div>
 				</div>
 			)}
