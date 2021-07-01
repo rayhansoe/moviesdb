@@ -22,6 +22,7 @@ const Pagination = ({ totalPages, page, setPage }) => {
 								return
 							}
 							setPage(curr => curr - curr + parseInt(e.target.value))
+							window.location.hash = "#title"
 						}}>
 						{getArrPagination().map(_page => {
 							return (
@@ -37,7 +38,8 @@ const Pagination = ({ totalPages, page, setPage }) => {
 		}
 		return getArrPagination().map(_page => {
 			return (
-				<button
+				<a
+					href='#title'
 					className={page === _page ? "btn-pagination active" : "btn-pagination"}
 					onClick={() => {
 						if (page === _page) {
@@ -47,7 +49,7 @@ const Pagination = ({ totalPages, page, setPage }) => {
 					}}
 					key={_page}>
 					{_page + 1}
-				</button>
+				</a>
 			)
 		})
 	}
