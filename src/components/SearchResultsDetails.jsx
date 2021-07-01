@@ -3,10 +3,12 @@ const SearchResultsDetails = ({ title, totalResults }) => {
 		if (title && totalResults) {
 			return (
 				<>
-					<h1 className='title'>{title}</h1>
+					<h1 id='title' className='title'>
+						{title}
+					</h1>
 					<p>
 						Explore <span>{totalResults}</span> movie information, all movie content and movie
-						images from OMDb API.
+						images from The Movie Database API.
 					</p>
 				</>
 			)
