@@ -51,7 +51,7 @@ const SearchBox = ({
 					setMovies(curr => curr - curr)
 					setMoviesSuggestion(() => [])
 				} else {
-					refMoviesSuggestion.current = data.results
+					refMoviesSuggestion.current = data.results.map(movie => ({ ...movie, type: "movie" }))
 					setMovies(() => refMoviesSuggestion.current)
 					setMoviesSuggestion(() => refMoviesSuggestion.current)
 					setTotalResults(curr => {
@@ -83,7 +83,7 @@ const SearchBox = ({
 					refMoviesSuggestion.current = []
 					setMovies(curr => curr - curr)
 				} else {
-					refMoviesSuggestion.current = data.results
+					refMoviesSuggestion.current = data.results.map(movie => ({ ...movie, type: "movie" }))
 					setMovies(() => refMoviesSuggestion.current)
 				}
 			})
@@ -97,7 +97,7 @@ const SearchBox = ({
 					refMoviesSuggestion.current = []
 					setMoviesSuggestion(() => [])
 				} else {
-					refMoviesSuggestion.current = data.results
+					refMoviesSuggestion.current = data.results.map(movie => ({ ...movie, type: "movie" }))
 					setMoviesSuggestion(() => refMoviesSuggestion.current)
 					setIsActive(() => true)
 				}
