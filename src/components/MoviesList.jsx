@@ -1,6 +1,7 @@
-const MoviesList = ({ movies, onClick, setMovieId, title }) => {
+const MoviesList = ({ movies, onClick, setMovieId, title, type }) => {
 	const handleClick = id => {
 		onClick()
+		window.location.hash = "#modal-title"
 		setMovieId(() => id)
 	}
 
@@ -13,7 +14,11 @@ const MoviesList = ({ movies, onClick, setMovieId, title }) => {
 						{movie.poster_path ? (
 							<img
 								className='poster'
-								src={`https://image.tmdb.org/t/p/w400/${movie.poster_path}`}
+								src={
+									type
+										? `https://image.tmdb.org/t/p/w300/${movie.poster_path}`
+										: `https://image.tmdb.org/t/p/w400/${movie.poster_path}`
+								}
 								alt={`${movie.title} ${
 									movie.release_date ? `(${movie.release_date.slice(0, 4)})` : ""
 								} Poster`}
@@ -36,8 +41,14 @@ const MoviesList = ({ movies, onClick, setMovieId, title }) => {
 								</a>
 							</div>
 						)}
-						<p className='title' onClick={() => handleClick(movie.id)}>
-							{movie.title.length > 20
+						<p className={type ? `title ${type}` : "title"} onClick={() => handleClick(movie.id)}>
+							{type
+								? movie.title.length > 10
+									? `${movie.title.slice(0, 20)}...`
+									: `${movie.title} ${
+											movie.release_date ? `(${movie.release_date.slice(0, 4)})` : ""
+									  }`
+								: movie.title.length > 20
 								? `${movie.title.slice(0, 30)}...`
 								: `${movie.title} ${
 										movie.release_date ? `(${movie.release_date.slice(0, 4)})` : ""
@@ -52,7 +63,7 @@ const MoviesList = ({ movies, onClick, setMovieId, title }) => {
 	return (
 		<>
 			{movies.length ? (
-				<div className='movies-list'>{renderMoviesList()}</div>
+				<div className={type ? `movies-list ${type}` : "movies-list"}>{renderMoviesList()}</div>
 			) : !title ? (
 				""
 			) : (
