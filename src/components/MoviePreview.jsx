@@ -26,7 +26,11 @@ const MoviePreview = ({ id, movie, onClick, setMovieId }) => {
 	return preMovie ? (
 		<>
 			<img
-				src={`https://image.tmdb.org/t/p/w200/${preMovie.poster_path}`}
+				src={
+					preMovie.poster_path
+						? `https://image.tmdb.org/t/p/w200/${preMovie.poster_path}`
+						: "/moviesdb/404 Error-bro.svg"
+				}
 				data-id={preMovie.id}
 				alt={`${preMovie.title} (${preMovie.release_date.slice(0, 4)}) poster`}
 				className='poster'

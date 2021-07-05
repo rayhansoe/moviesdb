@@ -28,7 +28,7 @@ const MoviesList = ({ movies, onClick, setMovieId, title, type }) => {
 							<div className='poster error' onClick={() => handleClick(movie.id)}>
 								<img
 									className='poster'
-									src='/Oops! 404 Error with a broken robot-rafiki.svg'
+									src='/moviesdb/Oops! 404 Error with a broken robot-rafiki.svg'
 									alt='Oops! 404 Error with a broken robot-rafiki'
 								/>
 								<a
@@ -68,7 +68,7 @@ const MoviesList = ({ movies, onClick, setMovieId, title, type }) => {
 				""
 			) : (
 				<div className='fallback'>
-					<img className='Error' src='/404 Error-bro.svg' alt='svg' />
+					<img className='Error' src='/moviesdb/404 Error-bro.svg' alt='svg' />
 					<a
 						className='attribution'
 						href='https://storyset.com/web'
