@@ -2,13 +2,13 @@
   "files": {
     "static/js/0.f10a1525.chunk.js": "/moviesdb/static/js/0.f10a1525.chunk.js",
     "static/js/0.f10a1525.chunk.js.map": "/moviesdb/static/js/0.f10a1525.chunk.js.map",
-    "static/js/1.65f19d82.chunk.js": "/moviesdb/static/js/1.65f19d82.chunk.js",
-    "static/js/1.65f19d82.chunk.js.map": "/moviesdb/static/js/1.65f19d82.chunk.js.map",
+    "static/js/1.dd4fca34.chunk.js": "/moviesdb/static/js/1.dd4fca34.chunk.js",
+    "static/js/1.dd4fca34.chunk.js.map": "/moviesdb/static/js/1.dd4fca34.chunk.js.map",
     "main.css": "/moviesdb/static/css/main.1714cebf.chunk.css",
     "main.js": "/moviesdb/static/js/main.cd39f507.chunk.js",
     "main.js.map": "/moviesdb/static/js/main.cd39f507.chunk.js.map",
-    "runtime-main.js": "/moviesdb/static/js/runtime-main.65d76a29.js",
-    "runtime-main.js.map": "/moviesdb/static/js/runtime-main.65d76a29.js.map",
+    "runtime-main.js": "/moviesdb/static/js/runtime-main.e36ae979.js",
+    "runtime-main.js.map": "/moviesdb/static/js/runtime-main.e36ae979.js.map",
     "static/js/4.dd1bebce.chunk.js": "/moviesdb/static/js/4.dd1bebce.chunk.js",
     "static/js/4.dd1bebce.chunk.js.map": "/moviesdb/static/js/4.dd1bebce.chunk.js.map",
     "static/js/5.af5c4fdd.chunk.js": "/moviesdb/static/js/5.af5c4fdd.chunk.js",
@@ -17,8 +17,8 @@
     "static/js/6.1b87ec31.chunk.js.map": "/moviesdb/static/js/6.1b87ec31.chunk.js.map",
     "static/js/7.c861873e.chunk.js": "/moviesdb/static/js/7.c861873e.chunk.js",
     "static/js/7.c861873e.chunk.js.map": "/moviesdb/static/js/7.c861873e.chunk.js.map",
-    "static/js/8.33b318c2.chunk.js": "/moviesdb/static/js/8.33b318c2.chunk.js",
-    "static/js/8.33b318c2.chunk.js.map": "/moviesdb/static/js/8.33b318c2.chunk.js.map",
+    "static/js/8.cff7bc9b.chunk.js": "/moviesdb/static/js/8.cff7bc9b.chunk.js",
+    "static/js/8.cff7bc9b.chunk.js.map": "/moviesdb/static/js/8.cff7bc9b.chunk.js.map",
     "static/js/9.85294cba.chunk.js": "/moviesdb/static/js/9.85294cba.chunk.js",
     "static/js/9.85294cba.chunk.js.map": "/moviesdb/static/js/9.85294cba.chunk.js.map",
     "static/js/10.3c737c7c.chunk.js": "/moviesdb/static/js/10.3c737c7c.chunk.js",
@@ -32,7 +32,7 @@
     "static/js/4.dd1bebce.chunk.js.LICENSE.txt": "/moviesdb/static/js/4.dd1bebce.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.65d76a29.js",
+    "static/js/runtime-main.e36ae979.js",
     "static/js/4.dd1bebce.chunk.js",
     "static/css/main.1714cebf.chunk.css",
     "static/js/main.cd39f507.chunk.js"
