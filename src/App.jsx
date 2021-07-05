@@ -29,13 +29,15 @@ function App() {
 
 	useEffect(() => {
 		if (isOpen) {
+			const portal = document.getElementById("portal")
 			myContainer.current.parentNode.parentNode.style.overflowX = "hidden"
 			myContainer.current.parentNode.parentNode.style.overflowY = "hidden"
-			myContainer.current.parentNode.nextSibling.nextSibling.style.zIndex = 5555
+			portal.style.zIndex = 5555
 		} else if (!isOpen) {
+			const portal = document.getElementById("portal")
 			myContainer.current.parentNode.parentNode.style.overflowX = "auto"
 			myContainer.current.parentNode.parentNode.style.overflowY = "auto"
-			myContainer.current.parentNode.nextSibling.nextSibling.style.zIndex = -1
+			portal.style.zIndex = -1
 		}
 	}, [isOpen])
 
