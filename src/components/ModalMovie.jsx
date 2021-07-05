@@ -242,14 +242,14 @@ const ModalMovie = ({ open, onClose, movieId, onClick, setMovieId }) => {
 					className='content'
 					width='1080'
 					height='620'
-					title='avengers'
+					title={movie ? movie.title : ""}
 					src={movieTrailers}
 					allowFullScreen></iframe>
 			) : (
 				""
 			)
 		},
-		[movieTrailers]
+		[movie, movieTrailers]
 	)
 
 	const renderMovieRecommandations = useMemo(
