@@ -70,7 +70,21 @@ const SearchBox = ({
 					})
 				}
 			})
-		} else if (title.length !== 0 && title && page !== 0) {
+		} else if (preTitle.length !== 0 && title !== preTitle && isActive) {
+			// Search Suggestion
+			url.current = `https://api.themoviedb.org/3/search/movie?query=${preTitle}&api_key=f363fbafab56237920b96af2c295f5e1`
+			let a = fetch(url.current)
+			a = a.then(fetchResponse).catch(fetchError)
+			a.then(data => {
+				if (data.Error) {
+					refMoviesSuggestion.current = []
+					setMoviesSuggestion(() => [])
+				} else {
+					refMoviesSuggestion.current = data.results.map(movie => ({ ...movie, type: "movie" }))
+					setMoviesSuggestion(() => refMoviesSuggestion.current)
+				}
+			})
+		} else if (title.length !== 0 && title && page >= 0) {
 			// Pagination
 			url.current = `https://api.themoviedb.org/3/search/movie?query=${title}&api_key=f363fbafab56237920b96af2c295f5e1&page=${
 				page + 1
@@ -85,21 +99,6 @@ const SearchBox = ({
 				} else {
 					refMoviesSuggestion.current = data.results.map(movie => ({ ...movie, type: "movie" }))
 					setMovies(() => refMoviesSuggestion.current)
-				}
-			})
-		} else if (preTitle.length !== 0 && title !== preTitle) {
-			// Search Suggestion
-			url.current = `https://api.themoviedb.org/3/search/movie?query=${preTitle}&api_key=f363fbafab56237920b96af2c295f5e1`
-			let a = fetch(url.current)
-			a = a.then(fetchResponse).catch(fetchError)
-			a.then(data => {
-				if (data.Error) {
-					refMoviesSuggestion.current = []
-					setMoviesSuggestion(() => [])
-				} else {
-					refMoviesSuggestion.current = data.results.map(movie => ({ ...movie, type: "movie" }))
-					setMoviesSuggestion(() => refMoviesSuggestion.current)
-					setIsActive(() => true)
 				}
 			})
 		} else if (refTitle.current === title && refTitle.current === preTitle && title === preTitle) {
@@ -139,6 +138,7 @@ const SearchBox = ({
 		setTotalResults,
 		setIsActive,
 		setTotalPages,
+		isActive,
 	])
 
 	const onFocus = () => setIsActive(() => true)
@@ -146,9 +146,10 @@ const SearchBox = ({
 	return (
 		<>
 			{isActive && <div className='layer' onClick={() => setIsActive(() => false)}></div>}
-			<div className='search-section' ref={myInput}>
+			<div className='search-section'>
 				<input
 					type='text'
+					ref={myInput}
 					className='search-box'
 					onChange={e => onChange(e.target.value)}
 					onKeyDown={e => {
