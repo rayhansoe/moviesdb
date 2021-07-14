@@ -1,6 +1,6 @@
-import { delays } from "../tools/delays"
+import { delays } from "../../tools/delays"
 import React, { useMemo, useRef, useEffect } from "react"
-import { handleError, handleResponse } from "../tools/apiUtils"
+import { handleError, handleResponse } from "../../tools/apiUtils"
 
 const SearchBox = ({
 	onChange,
@@ -143,6 +143,19 @@ const SearchBox = ({
 
 	const onFocus = () => setIsActive(() => true)
 
+	const onEnter = e => {
+		if (e.key === "Enter" && e.target.value.length !== 0) {
+			setTitle(() => refTitle.current.trim())
+			setPreTitle(() => refTitle.current.trim())
+			setPage(currentPage => currentPage - currentPage)
+			// setMoviesSuggestion(curr => curr.splice(0, curr.length))
+			setIsActive(() => false)
+		}
+	}
+
+	const handleChange = e => onChange(e.target.value)
+	const handleClick = () => setIsActive(() => true)
+
 	return (
 		<>
 			{isActive && <div className='layer' onClick={() => setIsActive(() => false)}></div>}
@@ -151,19 +164,11 @@ const SearchBox = ({
 					type='text'
 					ref={myInput}
 					className='search-box'
-					onChange={e => onChange(e.target.value)}
-					onKeyDown={e => {
-						if (e.key === "Enter" && e.target.value.length !== 0) {
-							setTitle(() => refTitle.current.trim())
-							setPreTitle(() => refTitle.current.trim())
-							setPage(currentPage => currentPage - currentPage)
-							// setMoviesSuggestion(curr => curr.splice(0, curr.length))
-							setIsActive(() => false)
-						}
-					}}
+					onChange={handleChange}
+					onKeyDown={onEnter}
 					onFocus={onFocus}
 					onKeyUp={delay}
-					onClick={() => setIsActive(() => true)}
+					onClick={handleClick}
 					placeholder={"Search..."}
 				/>
 			</div>

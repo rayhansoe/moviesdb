@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
-const Header = () => {
+const NavBar = () => {
 	return (
 		<nav className='navBg'>
 			<div className='navbar'>
@@ -19,4 +19,4 @@ const Header = () => {
 	)
 }
 
-export default Header
+export default NavBar

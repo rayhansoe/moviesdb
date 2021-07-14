@@ -38,23 +38,35 @@ const Pagination = ({ totalPages, page, setPage }) => {
 		}
 		return getArrPagination().map(_page => {
 			return (
-				<a
-					href='#title'
-					className={page === _page ? "btn-pagination active" : "btn-pagination"}
-					onClick={() => {
-						if (page === _page) {
-							return
-						}
-						setPage(curr => curr - curr + _page)
-					}}
-					key={_page}>
-					{_page + 1}
-				</a>
+				<>
+					{page === _page ? (
+						<button className='btn-pagination active' key={_page}>
+							{_page + 1}
+						</button>
+					) : (
+						<a
+							href={page === _page ? "/" : "#title"}
+							className='btn-pagination'
+							onClick={() => {
+								if (page === _page) {
+									return
+								}
+								setPage(curr => curr - curr + _page)
+							}}
+							key={_page}>
+							{_page + 1}
+						</a>
+					)}
+				</>
 			)
 		})
 	}
 
-	return <div className='pagination'>{renderPagination()}</div>
+	return (
+		<div className='pagination' id='#pagination'>
+			{renderPagination()}
+		</div>
+	)
 }
 
 export default Pagination

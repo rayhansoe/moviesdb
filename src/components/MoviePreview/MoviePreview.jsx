@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef } from "react"
-import { MovieById } from "../tools/MovieApi"
+import { MovieById } from "../../tools/MovieApi"
 
 const MoviePreview = ({ id, movie, onClick, setMovieId }) => {
 	const [preMovie, setPreMovie] = useState(() => {})

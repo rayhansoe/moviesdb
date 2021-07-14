@@ -60,6 +60,7 @@ const MoviesList = ({ movies, onClick, setMovieId, title, type }) => {
 		}
 		return ""
 	}
+
 	return (
 		<>
 			{movies.length ? (

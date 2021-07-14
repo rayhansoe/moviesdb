@@ -1,13 +1,15 @@
 import "./App.css"
 import React, { lazy, useState, Suspense, useRef, useEffect } from "react"
 
-const Header = lazy(() => import("./components/Header"))
-const SearchBox = lazy(() => import("./components/SearchBox"))
-const MoviesList = lazy(() => import("./components/MoviesList"))
-const MoviesSuggestion = lazy(() => import("./components/MoviesSuggestion"))
-const Pagination = lazy(() => import("./components/Pagination"))
-const SearchResultsDetails = lazy(() => import("./components/SearchResultsDetails"))
-const ModalMovie = lazy(() => import("./components/ModalMovie"))
+const NavBar = lazy(() => import("./components/NavBar/NavBar"))
+const SearchBox = lazy(() => import("./components/SearchBox/SearchBox"))
+const MoviesSuggestion = lazy(() => import("./components/MoviesSuggestion/MoviesSuggestion"))
+const SearchResultsDetails = lazy(() =>
+	import("./components/SearchResultsDetails/SearchResultsDetails")
+)
+const MoviesList = lazy(() => import("./components/MoviesList/MoviesList"))
+const Pagination = lazy(() => import("./components/Pagination/Pagination"))
+const ModalMovie = lazy(() => import("./components/ModalMovie/ModalMovie"))
 
 function App() {
 	const [page, setPage] = useState(() => 0)
@@ -68,9 +70,9 @@ function App() {
 	return (
 		<>
 			<div className='container' ref={myContainer}>
-				{/* Header */}
+				{/* NavBar */}
 				<Suspense fallback={<h1>Loading.... </h1>}>
-					<Header />
+					<NavBar />
 				</Suspense>
 
 				<div className='separator'></div>

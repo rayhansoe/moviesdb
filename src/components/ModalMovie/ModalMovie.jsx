@@ -1,7 +1,7 @@
 import { createPortal } from "react-dom"
 import React, { useMemo, useEffect, useRef, useState, lazy } from "react"
-import { MovieTrailers, MovieById, MovieCredits, MovieRecommandations } from "../tools/MovieApi"
-const MoviesList = lazy(() => import("./MoviesList"))
+import { MovieTrailers, MovieById, MovieCredits, MovieRecommandations } from "../../tools/MovieApi"
+const MoviesList = lazy(() => import("../MoviesList/MoviesList"))
 
 const ModalMovie = ({ open, onClose, movieId, onClick, setMovieId }) => {
 	const [movie, setMovie] = useState(() => {})
